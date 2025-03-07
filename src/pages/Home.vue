@@ -3,9 +3,8 @@
     <div class="expense_list">
         <div class="calendar">
             <Calendar 
-                v-if="expensesAbonnement"
-                :allExpenses="allExpenses"
-                :expensesAbonnement="expensesAbonnement"
+                v-if="monthlyExpenses"
+                :monthlyExpenses="monthlyExpenses"
                 @expense-selected="handleExpenseSelected"
                 @current-date="fetchExpenses($event)"
             ></Calendar>
@@ -16,9 +15,10 @@
                 <FinanceSummary :totalPriceOfExpenses="totalPriceOfExpenses" :savingsBudget="savingsBudget"></FinanceSummary>
             </div>
             <div>
-                <ExpensesList 
+                <ExpensesList
+                    class="expensesList"
                     :title="titleExpenses[1]"
-                    :expenses="allExpenses"
+                    :expenses="ExpensesOfMonth"
                     @expense-selected="handleExpenseSelected($event)"
                     @new-expense="handleExpenseSelected()"
                 ></ExpensesList>
@@ -51,8 +51,8 @@
     import type { User } from 'firebase/auth';
     import { getUserExpenses } from '@/services/expenseService';
 
-    let expensesAbonnement = ref<ExpenseDTO[]>();
-    let otherExpenses = ref<ExpenseDTO[]>();
+    let monthlyExpenses = ref<ExpenseDTO[]>();
+    let ExpensesOfMonth = ref<ExpenseDTO[]>();
     let allExpenses = ref<ExpenseDTO[]>();
     let totalPriceOfExpenses = ref<number>(0);
     let savingsBudget = ref<number>(0);
@@ -80,14 +80,14 @@
 
         loading.value = true;
         if(currentUser && currentMonth){
-            expensesAbonnement.value = [];
-            otherExpenses.value = [];
+            monthlyExpenses.value = [];
+            ExpensesOfMonth.value = [];
             allExpenses.value = [];
             totalPriceOfExpenses.value = 0;
             savingsBudget.value = 0;
 
-            expensesAbonnement.value = await getUserExpenses(currentUser.uid, currentMonth ,'category','==', 'mensuellement');
-            otherExpenses.value = await getUserExpenses(currentUser.uid, currentMonth);
+            monthlyExpenses.value = await getUserExpenses(currentUser.uid, currentMonth ,'category','==', 'mensuellement');
+            ExpensesOfMonth.value = await getUserExpenses(currentUser.uid, currentMonth, 'category','==', 'Ponctuellement');
             allExpenses.value = await getUserExpenses(currentUser.uid, currentMonth);
 
             allExpenses.value.forEach(expense => {
