@@ -49,7 +49,8 @@
     const props = defineProps(["monthlyExpenses"]);
     const emit = defineEmits();
     const Expenses = ref();
-    const today = new Date().toISOString().split('T')[0];
+    let displayMonth = parseInt(new Date().toISOString().split('T')[0].split('-')[1]);
+    let today = new Date().toISOString().split('T')[0];
     let lastYear = null; // Stocke la dernière année reçue
     let lastMonth = null; // Stocke la dernière année reçue
        
@@ -80,16 +81,16 @@
      * @param expenses - list of expenses.
      * @param month - month to be changed.
      */
-    function addIconExpensesInCalendar(expenses, month) {
+    function addIconExpensesInCalendar(expenses) {
         for (let index = 0; index < expenses.length; index++) {
 
             //add a "0" if the day or month is less than 10:
-            let transfomrmedMonth;
+            let transfomrmedMonth = displayMonth;
             let transfomrmedday;
 
             for (const [key, value] of Object.entries(expenses[index].date)) {
                 if (key === 'month') {
-                    transfomrmedMonth = value < 10 ? `0${value}` : value;
+                    transfomrmedMonth = value < 10 ? `0${transfomrmedMonth}` : transfomrmedMonth;
                 } else if (key === 'day') {
                     transfomrmedday = value < 10 ? `0${value}` : value;
                 }
@@ -97,7 +98,6 @@
             let selectedDate = `${expenses[index].date['year']}-${transfomrmedMonth}-${transfomrmedday}`;
 
             const logo = getLogoByName(expenses[index].logo.name);
-
 
             //add the icon of the expense in the calendar:
             document
@@ -125,6 +125,7 @@
      * @param month - month to be changed.
      */
      function changeDate(date) {
+        displayMonth = date +1;
         let [currentYear, currentMonth] = today.split("-").map(Number);
 
         let year = currentYear;

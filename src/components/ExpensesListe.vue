@@ -22,7 +22,7 @@
           </th>
         </tr>
       </thead>
-      <tbody v-if="!isloading">
+      <tbody v-if="!isloading && Expenses">
         <tr
           v-for="(expense, index) in Expenses"
           :key="index"
@@ -58,6 +58,7 @@
   watch(() => props.expenses, (lstExpenses: ExpenseDTO[]) => {
     isloading.value = true;
       if (lstExpenses) {
+        expenseList = [];
         isloading.value = true;
         
         lstExpenses.forEach(expenseDTO => {

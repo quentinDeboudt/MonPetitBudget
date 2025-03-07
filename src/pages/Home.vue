@@ -50,7 +50,7 @@
     import useUserStore from '@/stores/userStore';
     import type { User } from 'firebase/auth';
     import { getTotalPriceOfExpenses, getUserExpenses } from '@/services/expenseService';
-import type { Expense } from '@/interfaces/Expense';
+    import type { Expense } from '@/interfaces/Expense';
 
     let monthlyExpenses = ref<ExpenseDTO[]>();
     let ExpensesOfMonth = ref<ExpenseDTO[]>();
@@ -75,13 +75,6 @@ import type { Expense } from '@/interfaces/Expense';
         currentUser = userStore.currentUser
         if(currentUser){
             fetchExpenses({year: today.year, month: today.month});
-            monthlyExpenses.value = await getUserExpenses({
-                idUser: currentUser.uid,
-                date: {year:0, month:0},
-                field:'category',
-                WhereFilterOp:'==', 
-                value: 'mensuellement'}
-            );
         }else {
             router.push('/index');
         }
@@ -91,6 +84,7 @@ import type { Expense } from '@/interfaces/Expense';
 
         loading.value = true;
         if(currentUser && currentMonth){
+
             ExpensesOfMonth.value = [];
             monthlyExpenses.value = [];
             totalPriceOfExpenses.value = 0;
@@ -104,6 +98,13 @@ import type { Expense } from '@/interfaces/Expense';
                 value: 'Ponctuellement'}
             );
 
+            monthlyExpenses.value = await getUserExpenses({
+                idUser: currentUser.uid,
+                date: {year:0, month:0},
+                field:'category',
+                WhereFilterOp:'==', 
+                value: 'mensuellement'}
+            );
 
             totalPriceOfExpenses.value = await getTotalPriceOfExpenses(currentUser.uid, currentMonth)
 
@@ -111,9 +112,6 @@ import type { Expense } from '@/interfaces/Expense';
 
             loading.value = false;
         }
-        
-
-       
     };
 
     /**
