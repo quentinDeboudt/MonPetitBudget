@@ -5,7 +5,7 @@
             <Calendar 
                 v-if="monthlyExpenses"
                 :monthlyExpenses="monthlyExpenses"
-                @expense-selected="handleExpenseSelected"
+                @expense-selected="handleExpenseSelected($event)"
                 @current-date="fetchExpenses($event)"
             ></Calendar>
         </div>
@@ -49,11 +49,11 @@
     import router from '@/router';
     import useUserStore from '@/stores/userStore';
     import type { User } from 'firebase/auth';
-    import { getUserExpenses } from '@/services/expenseService';
+    import { getTotalPriceOfExpenses, getUserExpenses } from '@/services/expenseService';
+import type { Expense } from '@/interfaces/Expense';
 
     let monthlyExpenses = ref<ExpenseDTO[]>();
     let ExpensesOfMonth = ref<ExpenseDTO[]>();
-    let allExpenses = ref<ExpenseDTO[]>();
     let totalPriceOfExpenses = ref<number>(0);
     let savingsBudget = ref<number>(0);
     let newExpense = ref<boolean>(false);
@@ -61,8 +61,12 @@
     let loading = ref(true);
     const dialogExpenses = ref(false);
     const userStore = useUserStore();
-    const selectedExpense = ref<ExpenseDTO | null>();
+    const selectedExpense = ref<Expense | null>();
     const titleExpenses = ['Dépenses hebdomadaires', 'Dépenses ponctuelles', 'Répartition des dépenses'];
+    const today = {
+        year: parseInt(new Date().toISOString().split('T')[0].split('-')[0]),
+        month: parseInt(new Date().toISOString().split('T')[0].split('-')[1])
+    };
 
     /**
      * onMounted - waits for the DOM to be completely rendered.
@@ -70,7 +74,14 @@
     onMounted(async () => {
         currentUser = userStore.currentUser
         if(currentUser){
-            fetchExpenses({year: 2025, month: 3});
+            fetchExpenses({year: today.year, month: today.month});
+            monthlyExpenses.value = await getUserExpenses({
+                idUser: currentUser.uid,
+                date: {year:0, month:0},
+                field:'category',
+                WhereFilterOp:'==', 
+                value: 'mensuellement'}
+            );
         }else {
             router.push('/index');
         }
@@ -80,23 +91,23 @@
 
         loading.value = true;
         if(currentUser && currentMonth){
-            monthlyExpenses.value = [];
             ExpensesOfMonth.value = [];
-            allExpenses.value = [];
+            monthlyExpenses.value = [];
             totalPriceOfExpenses.value = 0;
             savingsBudget.value = 0;
 
-            monthlyExpenses.value = await getUserExpenses(currentUser.uid, currentMonth ,'category','==', 'mensuellement');
-            ExpensesOfMonth.value = await getUserExpenses(currentUser.uid, currentMonth, 'category','==', 'Ponctuellement');
-            allExpenses.value = await getUserExpenses(currentUser.uid, currentMonth);
+            ExpensesOfMonth.value = await getUserExpenses({
+                idUser: currentUser.uid,
+                date: currentMonth,
+                field:'category',
+                WhereFilterOp:'==', 
+                value: 'Ponctuellement'}
+            );
 
-            allExpenses.value.forEach(expense => {
-                totalPriceOfExpenses.value += expense.amount;
 
-                if(expense.logo.category == "epargne"){
-                    savingsBudget.value += expense.amount;
-                }
-            });
+            totalPriceOfExpenses.value = await getTotalPriceOfExpenses(currentUser.uid, currentMonth)
+
+            savingsBudget.value = 50;
 
             loading.value = false;
         }
@@ -108,7 +119,7 @@
     /**
      * openModal - Open Modal to créate new Expenses or view selected expense.
      */
-    function handleExpenseSelected(expense?: ExpenseDTO) {
+    function handleExpenseSelected(expense?: Expense) {
         selectedExpense.value = null;
         if(expense){
             setTimeout(() => {
