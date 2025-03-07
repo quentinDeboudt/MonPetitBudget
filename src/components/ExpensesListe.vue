@@ -1,11 +1,11 @@
 <template>
   <v-card class="cardStyled" elevation="4">
     <v-card-title class="text-h6 font-weight-bold d-flex justify-space-between">
-        {{title}} - {{ monthString }}
+        {{title}}
         
         <v-icon @click="viewExpense">mdi-plus-box</v-icon>
     </v-card-title>
-    <v-table>
+    <v-table density="compact" fixed-header hover>
       <thead>
         <tr>
           <th class="text-left">
@@ -42,13 +42,13 @@
   
 <script setup lang="ts">
   import { defineProps, watch, defineEmits  } from "vue";
-  import { getLogoByName } from "@/data/logos";
   import type { Expense } from "@/interfaces/Expense";
   import type { ExpenseDTO } from "@/interfaces/ExpenseDto";
+  import { ExpenseMapper } from "@/interfaces/ExpenseMapper";
 
+  let expenseList: Expense[] = [];
   let Expenses = ref<Expense[]>([]);
   let isloading = ref<boolean>(true);
-  let monthString = ref<string>()
   const props = defineProps(["expenses", "title"]);
   const emit = defineEmits();
 
@@ -58,47 +58,16 @@
   watch(() => props.expenses, (lstExpenses: ExpenseDTO[]) => {
     isloading.value = true;
       if (lstExpenses) {
+        isloading.value = true;
+        
+        lstExpenses.forEach(expenseDTO => {
+          expenseList.push(ExpenseMapper.ExpenseDtoToExpense(expenseDTO))
+        })
+
+        Expenses.value = expenseList;
         isloading.value = false;
-        Expenses.value = transformData(lstExpenses);
       }
   }, { immediate: true });
-
-
-  /**
-   * transformData - Transforme data to display.
-   * @param {ExpenseDTO[]} lstExpenses - List of expenses.
-   * @returns {ExpenseDTO[]} - List of expenses transformed.
-   */
-  function transformData(lstExpenses: ExpenseDTO[]): Expense[]{
-
-     // Tableau des mois en français
-    const months = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-
-    let lstExpensesTransformed: Expense[] = [];
-
-    lstExpenses.forEach( expense => {
-
-      monthString.value = months[expense.date.month -1]; // Mois (0-11)
-      
-      let logoName = expense.logo;
-      let logo = getLogoByName(logoName.name);
-
-      let ExpenseTransformed = {
-        id: expense.id,
-        name: expense.name,
-        date: `${expense.date.day} ${monthString.value} ${expense.date.year}`,
-        logo: {name: logo.name, path: logo.path, category: logo.category},
-        amount: expense.amount,
-        category: expense.category
-      }
-      lstExpensesTransformed.push(ExpenseTransformed);
-    })
-
-    return lstExpensesTransformed;
-  }
   
   /**
    * viewExpense - Emit the selected expense.
@@ -119,11 +88,6 @@
     margin-top: 10px;
     height: 65vh;
     overflow-y: auto;
-  }
-  .expenseHover:hover {
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.12);
-    transition: .1s;
   }
   #icon {
     width: 30px !important;
