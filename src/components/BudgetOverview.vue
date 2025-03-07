@@ -1,29 +1,30 @@
 <template>
-
-    <v-list-item v-for="(category) in getAllCategories">
-        <v-card elevation="2" class="CardStyled">
-            <div class="item">
-                <div class="elem"> 
-                    <div>
-                        <v-img  class="icon" :src="category.logo.path"></v-img>
+    <v-card elevation="4" class="GlobaleCard">
+        <v-list-item v-for="(category) in getAllCategories">
+            <v-card elevation="2" class="CardStyled">
+                <div class="item">
+                    <div class="elem"> 
+                        <div>
+                            <v-img  class="icon" :src="category.logo.path"></v-img>
+                        </div>
+                        <div>
+                            <v-list-item-title class="font-weight-bold">{{ category.name }}</v-list-item-title>
+                            <v-list-item-subtitle>{{ category.numberExpenses }} dépenses - {{ category.proportion }}%</v-list-item-subtitle>
+                        </div>
                     </div>
-                    <div>
-                        <v-list-item-title class="font-weight-bold">{{ category.name }}</v-list-item-title>
-                        <v-list-item-subtitle>{{ category.numberExpenses }} dépenses - {{ category.proportion }}%</v-list-item-subtitle>
+                    
+                    <div class="elem">
+                    <v-list-item-action>
+                        <span class="font-weight-bold">-{{ category.amounts }}€</span>
+                    </v-list-item-action>
                     </div>
                 </div>
-                
-                <div class="elem">
-                <v-list-item-action>
-                    <span class="font-weight-bold">-{{ category.amounts }}€</span>
-                </v-list-item-action>
+                <div class="containerCase">
+                    <div class="case" :style="{backgroundColor: category.color, width:category.proportion+'%' }" ></div>
                 </div>
-            </div>
-            <div class="containerCase">
-                <div class="case" :style="{backgroundColor: category.color, width:category.proportion+'%' }" ></div>
-            </div>
-        </v-card>
-    </v-list-item>
+            </v-card>
+        </v-list-item>
+    </v-card>
 </template>
     
 <script setup lang="ts">
@@ -33,13 +34,11 @@
     import type { BudgetCategories  } from "@/interfaces/BudgetCategories";
     import useUserStore from '@/stores/userStore';
     import type { ExpenseDTO } from "@/interfaces/ExpenseDto";
-    import type { Logo } from "@/interfaces/Logo";
 
     let income = ref<number>(0);
-
+    let getAllCategories = ref<BudgetCategories[]>();
     const userStore = useUserStore();
     const props = defineProps(["expenses", "title"]);
-    let getAllCategories = ref<BudgetCategories[]>();
     const colors = ['#00feff', '#00b9ff', '#004eff', '#8400ff', '#de00ff', '#ff00bd', '#ff003d', '#00ffde', '#00ff77', '#8aff00', '#fff800', '#ffb300', '#ff7300'];
 
     /**
@@ -72,6 +71,7 @@
         let isGoodCategory = false;
         let totalExpenses = 0;
         let numberExpenses = 0
+        let colorbar = '';
         getAllCategories.value = [];
         
         TableCategories.forEach(category =>{
@@ -81,18 +81,19 @@
                     isGoodCategory = true;
                     totalExpenses += Expenses[index].amount;
                     numberExpenses += 1;
+                    colorbar = colors[index];
                 }
             }
             if(isGoodCategory){
 
-                const pourcentage = (totalExpenses * 100)/ income.value;
+                const pourcentage = Math.round((totalExpenses * 100)/ income.value);
 
                 Newcategory = {
                     name: category.name,
                     numberExpenses: numberExpenses,
                     proportion: pourcentage,
                     amounts: totalExpenses,
-                    color: 'red',
+                    color: colorbar,
                     logo: getLogoByName(category.logo)
                 }
                 totalCategories.push(Newcategory);
@@ -110,6 +111,10 @@
 </script>
   
 <style scoped>
+    .GlobaleCard{
+        width: 25vw;
+        margin: 10px;
+    }
     .CardStyled {
         margin: 2px !important;
         padding: 4px;
