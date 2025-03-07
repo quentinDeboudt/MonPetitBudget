@@ -53,7 +53,6 @@
    * watch - Update 'selectedLogo' if parent change 'modelValue'.
    */
    watch(() => props.modelValue, (newValue) => {
-    console.log("ce que recois Selectlogo: ", newValue)
     selectedLogo.value = getLogoByName(newValue.name);
   });
 
@@ -61,7 +60,6 @@
    * watch - Update parent if User selected to auter logo.
    */
   watch(selectedLogo, (newLogo) => {
-    
     emit("update:modelValue", newLogo ? newLogo : null);
   });
 </script>

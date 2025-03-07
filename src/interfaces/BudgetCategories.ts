@@ -1,7 +1,7 @@
 import type { Logo } from "./Logo";
 
 export interface BudgetCategories {
-    title: string;
+    name: string;
     numberExpenses: number;
     proportion: number;
     amounts: number;

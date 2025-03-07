@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="isOpen" persistent max-width="800px">
+  <v-dialog v-model="OpenModal" v-if="expenseLocal" persistent max-width="800px">
     <v-card>
       <v-card-title class="d-flex justify-space-between">
         <span v-if="expense?.id">Modifier la dépense</span>
@@ -14,6 +14,7 @@
         </div>
         <div class="positionInput">
           <v-select
+            v-if="expenseLocal.category"
             label="Type de dépense"
             class="styledInput"
             v-model="expenseLocal.category"
@@ -21,7 +22,7 @@
           ></v-select>
           <v-text-field class="styledInput" v-model="expenseLocal.date" label="Date" type="date"></v-text-field>
 
-          <SelectLogo v-model="expenseLocal.logo" />
+          <SelectLogo v-if="expenseLocal.logo" v-model="expenseLocal.logo" />
         </div>
 
         <v-card elevation="4" class="card">
@@ -67,19 +68,20 @@
     idUser: string;
     newExpense: boolean;
   }>();
-  let isOpen = ref<boolean>(props.dialog);
+  let OpenModal = ref<boolean>();
 
   let expenseLocal = ref<Expense>({ id: 0, name: '', date: '', logo: { name: 'Neftix', path: '', category: '' }, amount: 0, category: '' });
   
-  /**
-   * watch - watches the dialogLocal to display the modal.
-   */
-  watch(
-    () => props.dialog,
-    (isOpen) => {
-      isOpen = isOpen;
-    }
-  );
+  // /**
+  //  * watch - watches the dialogLocal to display the modal.
+  //  */
+  // watch(
+  //   () => props.dialog,
+  //   (propsIsOpen) => {
+  //     isOpen.value = propsIsOpen;
+  //     console.log(propsIsOpen)
+  //   }
+  // );
 
   /**
    * watch - watches the expense to update the data to be displayed.
@@ -87,7 +89,10 @@
   watch(
     () => props.expense,
     (expense) => {
-      expenseLocal.value = expense;
+      if(expense != null){
+        expenseLocal.value = expense;
+        OpenModal.value = true;
+      }
       
     },
     { deep: true, immediate: true }
@@ -118,8 +123,8 @@
    * closeModal - closes the modal.
    */
   const closeModal = (reloadPage: boolean) => {
-    isOpen.value = false;
     emit('update:dialog', reloadPage);
+    OpenModal.value = false;
   };
 </script>
 

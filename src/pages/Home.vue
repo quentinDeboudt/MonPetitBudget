@@ -26,6 +26,12 @@
             
         </div>
     </div>
+    <div>
+        <budgetOverview
+            :expenses="AllExpenses"
+            title="coucou"
+        ></budgetOverview>
+    </div>
 
     <!-- Modal to create an expense -->
     <ModalExpenses
@@ -43,6 +49,7 @@
     import FinanceSummary from '@/components/FinanceSummary.vue';
     import Calendar from '@/components/Calendar.vue';
     import ExpensesList from '@/components/ExpensesListe.vue';
+    import BudgetOverview from '@/components/BudgetOverview.vue';
     import ModalExpenses from '@/components/ModalExpenses.vue';
     import { ref, onMounted } from 'vue';
     import type { ExpenseDTO } from '@/interfaces/ExpenseDto';
@@ -54,6 +61,7 @@
 
     let monthlyExpenses = ref<ExpenseDTO[]>();
     let ExpensesOfMonth = ref<ExpenseDTO[]>();
+    let AllExpenses = ref<ExpenseDTO[]>([]);
     let totalPriceOfExpenses = ref<number>(0);
     let savingsBudget = ref<number>(0);
     let newExpense = ref<boolean>(false);
@@ -106,6 +114,8 @@
                 value: 'mensuellement'}
             );
 
+            AllExpenses.value = [...monthlyExpenses.value, ...ExpensesOfMonth.value];
+
             totalPriceOfExpenses.value = await getTotalPriceOfExpenses(currentUser.uid, currentMonth)
 
             savingsBudget.value = 50;
@@ -141,7 +151,7 @@
         if(reloading && userStore.currentUser?.uid){
             fetchExpenses({year: 2025, month: 3});
         }
-        // dialogExpenses.value = false;
+        dialogExpenses.value = false;
     }
 </script>
 
