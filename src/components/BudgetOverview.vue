@@ -112,8 +112,8 @@
   
 <style scoped>
     .GlobaleCard{
-        width: 25vw;
-        margin: 10px;
+        max-width: 50vw;
+        margin: 9px;
     }
     .CardStyled {
         margin: 2px !important;
