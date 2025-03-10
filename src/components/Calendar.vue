@@ -159,19 +159,4 @@
 </script>
 
 <style scoped>
-    .styledCard{
-        margin: 0px;
-        width: fit-content;
-    }
-    .cardExpenses{
-        margin-left: 4px;
-        margin-right: auto;
-        width: 20vw;
-        height: 30vh;
-    }
-    .expenseHover:hover {
-        cursor: pointer;
-        background-color: rgba(0, 0, 0, 0.12);
-        transition: .1s;
-    }
 </style>
