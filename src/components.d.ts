@@ -10,6 +10,7 @@ declare module 'vue' {
     Abonnement: typeof import('./components/Abonnement.vue')['default']
     AppBar: typeof import('./components/AppBar.vue')['default']
     Budget: typeof import('./components/Budget.vue')['default']
+    BudgetOptimizer: typeof import('./components/BudgetOptimizer.vue')['default']
     BudgetOverview: typeof import('./components/BudgetOverview.vue')['default']
     Calendar: typeof import('./components/Calendar.vue')['default']
     copy: typeof import('./components/Abonnement copy.vue')['default']
