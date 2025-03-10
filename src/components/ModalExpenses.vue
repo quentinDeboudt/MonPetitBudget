@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="OpenModal" v-if="expenseLocal" persistent max-width="800px">
+  <v-dialog v-model="OpenModal" v-if="expenseLocal" locale="fr" persistent max-width="800px">
     <v-card>
       <v-card-title class="d-flex justify-space-between">
         <span v-if="expense?.id">Modifier la dépense</span>
@@ -14,7 +14,6 @@
         </div>
         <div class="positionInput">
           <v-select
-            v-if="expenseLocal.category"
             label="Type de dépense"
             class="styledInput"
             v-model="expenseLocal.category"
@@ -72,17 +71,6 @@
 
   let expenseLocal = ref<Expense>({ id: 0, name: '', date: '', logo: { name: 'Neftix', path: '', category: '' }, amount: 0, category: '' });
   
-  // /**
-  //  * watch - watches the dialogLocal to display the modal.
-  //  */
-  // watch(
-  //   () => props.dialog,
-  //   (propsIsOpen) => {
-  //     isOpen.value = propsIsOpen;
-  //     console.log(propsIsOpen)
-  //   }
-  // );
-
   /**
    * watch - watches the expense to update the data to be displayed.
    */

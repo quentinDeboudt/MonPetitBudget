@@ -22,8 +22,8 @@ export default createVuetify({
   theme: {
     defaultTheme: 'light',
   },
-  locale: {
-    locale: 'fr',  // Définit la langue principale en français
-    fallback: 'fr'  // Assure que tout reste en français si besoin
-  }
+  // locale: {
+  //   locale: 'fr',
+  //   fallback: 'fr',
+  // }
 })
