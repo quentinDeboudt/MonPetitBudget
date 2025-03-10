@@ -14,7 +14,7 @@
             </template>
             <template #header></template>
             <template #actions>
-                <v-table class="cardExpenses" density="compact" fixed-header hover>
+                <v-table class="expenses" density="compact" fixed-header hover>
                     <thead>
                         <tr>
                             <th class="text-left">Logo</th>
@@ -159,4 +159,10 @@
 </script>
 
 <style scoped>
+    .expenses {
+        margin: auto;
+        overflow-y: auto; 
+        height: 35vh;
+        width: 100%;
+    }
 </style>

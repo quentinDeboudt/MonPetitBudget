@@ -86,7 +86,6 @@
 
 <style scoped>
   .cardStyled {
-    margin-top: 10px;
     height: 65vh;
     overflow-y: auto;
   }

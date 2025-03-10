@@ -11,53 +11,53 @@
 
     <AppBar @update:reloadData="fetchExpenses($event)" ></AppBar>
 
-    <v-row >
+    <v-row class="ma-5">
         <v-col cols="12" sm="3">
-            <v-container fluid>
-                <Calendar
-                    class="flex-grow-0 flex-shrink-0" style="min-width: 350px;" 
-                    v-if="monthlyExpenses"
-                    :monthlyExpenses="monthlyExpenses"
-                    @expense-selected="handleExpenseSelected($event)"
-                    @current-date="fetchExpenses($event)"
-                ></Calendar>
-            </v-container>
+            <Calendar
+                v-if="monthlyExpenses"
+                :monthlyExpenses="monthlyExpenses"
+                @expense-selected="handleExpenseSelected($event)"
+                @current-date="fetchExpenses($event)"
+            ></Calendar>
         </v-col>
 
         <v-col cols="12" sm="9">
-            <div>
-                <v-container>
-                    <FinanceSummary :totalPriceOfExpenses="totalPriceOfExpenses" :savingsBudget="savingsBudget"></FinanceSummary>
-                </v-container>
-            </div>
-            <div>
-                <v-container>
-                    <ExpensesList
-                        class="expensesList"
-                        :title="titleExpenses[1]"
-                        :expenses="ExpensesOfMonth"
-                        @expense-selected="handleExpenseSelected($event)"
-                        @new-expense="handleExpenseSelected()"
-                    ></ExpensesList>
-                </v-container>
-            </div>
+            <v-container>
+                <FinanceSummary :totalPriceOfExpenses="totalPriceOfExpenses" :savingsBudget="savingsBudget"></FinanceSummary>
+            </v-container>
             
+            <v-container>
+                <ExpensesList
+                    class="expensesList"
+                    :title="titleExpenses[1]"
+                    :expenses="ExpensesOfMonth"
+                    @expense-selected="handleExpenseSelected($event)"
+                    @new-expense="handleExpenseSelected()"
+                ></ExpensesList>
+            </v-container>
         </v-col>
     </v-row>
-    <v-row no-gutters>
-        <v-col  md="3">
+
+    <v-row class="ma-5">
+        <v-col cols="12" sm="3">
             <budgetOverview
                 :expenses="AllExpenses"
-                title="coucou"
+                title="Categorie des dépenses"
             ></budgetOverview>
         </v-col>
         
-        <v-col md="9">
+        <v-col cols="12" sm="4">
             <BudgetOptimizer
                 :expenses="AllExpenses"
-                title="coucou"
+                title="Nos recomandations"
             ></BudgetOptimizer>
-        </v-col>ss
+        </v-col>
+
+        <v-col cols="12" sm="5">
+            <v-card>
+                <VisualRepresentation></VisualRepresentation>
+            </v-card>
+        </v-col>
     </v-row>
 </template>
 
@@ -69,6 +69,8 @@
     import BudgetOverview from '@/components/BudgetOverview.vue';
     import BudgetOptimizer from '@/components/BudgetOptimizer.vue';
     import ModalExpenses from '@/components/ModalExpenses.vue';
+    import VisualRepresentation from '@/components/VisualRepresentation.vue';
+
     import { ref, onMounted } from 'vue';
     import type { ExpenseDTO } from '@/interfaces/ExpenseDto';
     import router from '@/router';

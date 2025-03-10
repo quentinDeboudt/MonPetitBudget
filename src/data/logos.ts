@@ -157,9 +157,6 @@ export const logos = [
   { name: "epargne", path: "/src/assets/logo_bank/epingle.png", props: { disabled: true}},
   
   { name: "Epargne", path: "/src/assets/logo_bank/epargne.png", category: "epargne"  },
-
-  //default:
-  { name: "à définir", path: "/src/assets/logo_bank/point-dinterrogation.png"  },
 ];
 
 export function getLogoByName(name: string):Logo {
@@ -172,7 +169,7 @@ export function getLogoByName(name: string):Logo {
 
 
 export const DEFAULT_LOGO = {
-  name: "à définir",
+  name: "",
   path: "/src/assets/logo_bank/point-dinterrogation.png",
   category: "Autre",
   props: { disabled: false },

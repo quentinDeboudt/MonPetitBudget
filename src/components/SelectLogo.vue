@@ -1,5 +1,5 @@
 <template>
-  <v-select
+  <v-autocomplete
     v-model="selectedLogo"
     :items="logos"
     item-title="name"
@@ -25,7 +25,7 @@
         </template>
       </v-list-item>
     </template>
-  </v-select>
+  </v-autocomplete>
 </template>
 
 <script setup lang="ts">
@@ -37,7 +37,7 @@
     modelValue: Logo;
   }>();
   const emit = defineEmits(["update:modelValue"]);
-  const selectedLogo = ref<Logo>({ name: "à définir", path: "/src/assets/logo_bank/point-dinterrogation.png" });
+  const selectedLogo = ref<Logo>();
 
   import { onMounted } from "vue";
 

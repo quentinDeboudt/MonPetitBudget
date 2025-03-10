@@ -1,69 +1,25 @@
 <template>
-    <v-card elevation="4" class="d-flex">
-        <div class="incomeProportion">
-            <p>100% -></p>
-            <p>90% -></p>
-            <p>80% -></p>
-            <p>70% -></p>
-            <p>60% -></p>
-            <p>50% -></p>
-            <p>40% -></p>
-            <p>30% -></p>
-            <p>20% -></p>
-            <p>10% -></p>
-            <p>0% -></p>
-        </div>
+    <v-card elevation="4" >
+        <h4>{{ title }}</h4>
         <v-list-item v-for="(category) in getAllCategories">
-            <v-tooltip>
-                <template v-slot:activator="{ props }">
-                    <div class="incomeBar" v-bind="props">
-                        <div class="averageExpensesPosition">
-                            <div
-                                class="averageExpenses" 
-                                :style="{
-                                    backgroundColor: category.color,
-                                    height:((category.max - category.min))+'%',
-                                }"
-                            ></div>
-                            <div
-                                class="averageExpenses"
-                                :style="{
-                                    height:(category.min)+'%',
-                                }"
-                            ></div>
-                        </div>
-                        
-
-                        <div class="spendingSlider"
-                            :style="{
-                            height:(category.proportion)+'%',
-                            }"
-                        ></div>
-                    </div>
-                </template>
-                
+            <v-card >
                 <div>
-                    <div>
-                        <v-img  class="icon" :src="category.logo.path"></v-img>
-                    </div>
-                    <div>
-                        <v-list-item-title class="font-weight-bold">{{ category.name }}</v-list-item-title>
-                        <v-list-item-subtitle>{{ category.numberExpenses }} dépenses - {{ category.proportion }}%</v-list-item-subtitle>
-
-                        <div v-if="category.average" >
-                            <v-chip :prepend-icon="category.average.status" color="green">
-                            {{category.average.difference}}%
-                            </v-chip>
-                            -{{ category.amounts }}€
-                            <p> En moyenne, la categorie {{ category.name }} ce situe entre {{ category.min }}% et {{ category.max }}% du revenue.</p>
-                        </div>
-                        
-                    </div>
+                    <v-img  class="icon" :src="category.logo.path"></v-img>
                 </div>
-            </v-tooltip>
-            <div class="titleExpenes">
-                <v-img  class="icon" :src="category.logo.path"></v-img>
-            </div>
+                <div>
+                    <v-list-item-title class="font-weight-bold">{{ category.name }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ category.numberExpenses }} dépenses - {{ category.proportion }}%</v-list-item-subtitle>
+
+                    <div v-if="category.average" >
+                        <v-chip :prepend-icon="category.average.status" color="green">
+                        {{category.average.difference}}%
+                        </v-chip>
+                        -{{ category.amounts }}€
+                        <p> En moyenne, la categorie {{ category.name }} ce situe entre {{ category.min }}% et {{ category.max }}% du revenue.</p>
+                    </div>
+                    
+                </div>
+            </v-card>
         </v-list-item>
     </v-card>
 </template>
@@ -112,7 +68,7 @@
         let isGoodCategory = false;
         let totalExpenses = 0;
         let numberExpenses = 0
-        let colorbar = '';
+        let colorbar = 0;
         let average: { status: string, difference: number } | undefined;
         getAllCategories.value = [];
         
@@ -123,7 +79,7 @@
                         isGoodCategory = true;
                         totalExpenses += Expenses[index].amount;
                         numberExpenses += 1;
-                        colorbar = colors[index];
+                        colorbar +=1;
                     }
                 }
             }
@@ -137,7 +93,7 @@
                     numberExpenses: numberExpenses,
                     proportion: pourcentage,
                     amounts: totalExpenses,
-                    color: colorbar,
+                    color: colors[colorbar],
                     logo: getLogoByName(category.logo),
                     average: average,
                     min: category.averageSpending.min,
@@ -194,39 +150,23 @@
 </script>
   
 <style scoped>
-    .incomeProportion {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 42vh;
-        font-size: smaller;
-    }
-    .incomeBar{
+    .test {
+        border: 1px green solid;
         width: 5vw;
         height: 40vh;
-        border-radius: 5px;
-        background-color: rgb(211, 211, 211);
-        display: flex;
-        align-items: flex-end;
-    }
-    .averageExpensesPosition {
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        height: 40vh;
     }
     .averageExpenses {
-        width: 5vw;
-        border-radius: 5px ;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        border: 1px red solid;
     }
     .spendingSlider {
-        position: absolute;
-        border-top: 2px black solid ;
+        position: relative;
+        border-top: 5px black solid ;
         width: 5vw;
-    }
-    .titleExpenes {
-        display: flex;
-        justify-content: center;
-        margin: 10px;
     }
 </style>

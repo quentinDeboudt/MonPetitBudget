@@ -1,5 +1,6 @@
 <template>
     <v-card elevation="4" class="GlobaleCard">
+        <h4>{{ title }}</h4>
         <v-list-item v-for="(category) in getAllCategories">
             <v-card elevation="2" class="CardStyled">
                 <div class="item">
@@ -113,7 +114,8 @@
 <style scoped>
     .GlobaleCard{
         max-width: 50vw;
-        margin: 9px;
+        overflow-y: auto; 
+        height: 50vh;
     }
     .CardStyled {
         margin: 2px !important;

@@ -13,15 +13,15 @@
           <v-text-field class="styledInput" v-model="expenseLocal.amount" label="Price €" type="number"></v-text-field>
         </div>
         <div class="positionInput">
-          <v-select
+          <v-autocomplete
             label="Type de dépense"
             class="styledInput"
             v-model="expenseLocal.category"
             :items="['mensuellement', 'Ponctuellement']"
-          ></v-select>
+          ></v-autocomplete>
           <v-text-field class="styledInput" v-model="expenseLocal.date" label="Date" type="date"></v-text-field>
 
-          <SelectLogo v-if="expenseLocal.logo" v-model="expenseLocal.logo" />
+          <SelectLogo v-if="expenseLocal" v-model="expenseLocal.logo" />
         </div>
 
         <v-card elevation="4" class="card">
@@ -69,7 +69,7 @@
   }>();
   let OpenModal = ref<boolean>();
 
-  let expenseLocal = ref<Expense>({ id: 0, name: '', date: '', logo: { name: 'Neftix', path: '', category: '' }, amount: 0, category: '' });
+  let expenseLocal = ref<Expense>({ id: 0, name: '', date: '', logo: { name: '', path: '', category: '' }, amount: 0, category: '' });
   
   /**
    * watch - watches the expense to update the data to be displayed.
