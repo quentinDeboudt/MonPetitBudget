@@ -89,29 +89,31 @@
   /**
    * submit - handles the form submission.
    */
-  function submit() {
+  async function submit() {
     if(expenseLocal.value){
-      addExpense(props.idUser, expenseLocal.value);
-      closeModal(true);
+
+      const isNewExpense = true;//TODO: Il faut changer la valeur si ce n'est pas une nouvelles dépense.
+
+      let message = await addExpense(props.idUser, expenseLocal.value, isNewExpense);
+      closeModal(true, message);
     }
-    
   }
 
   /**
    * submit - handles the form submission.
    */
-  function expenseDelete(){
+  async function expenseDelete(){
     if(expenseLocal.value){
-      deleteExpense(props.idUser, expenseLocal.value);
-      closeModal(true);
+      let message = await deleteExpense(props.idUser, expenseLocal.value);
+      closeModal(true, message);
     }
   };
 
   /**
    * closeModal - closes the modal.
    */
-  const closeModal = (reloadPage: boolean) => {
-    emit('update:dialog', reloadPage);
+  const closeModal = (reloadPage: boolean, message: string) => {
+    emit('update:dialog', {reloadPage: reloadPage, snackbarTexte: message});
     OpenModal.value = false;
   };
 </script>

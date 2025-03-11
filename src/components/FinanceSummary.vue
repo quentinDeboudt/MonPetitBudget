@@ -1,13 +1,10 @@
 <template>
     <v-row>
         <v-col>
-            <v-card elevation="4">
+            <v-card elevation="4" :loading="!income">
                 <v-card-title class="text-h6 font-weight-bold">Revenus</v-card-title>
                 <v-card-text v-if="income">
                     {{income}} €
-                </v-card-text>
-                <v-card-text v-if="!income">
-                    <v-progress-circular indeterminate color="primary"></v-progress-circular>
                 </v-card-text>
                 <v-card-actions>
                     <v-chip prepend-icon="mdi-arrow-up" color="green">
@@ -19,13 +16,10 @@
         </v-col>
         
         <v-col>
-            <v-card elevation="4">
+            <v-card elevation="4" :loading="!props.totalPriceOfExpenses">
                 <v-card-title class="text-h6 font-weight-bold">Dépenses</v-card-title>
                 <v-card-text v-if="income">
                     {{ props.totalPriceOfExpenses }} €
-                </v-card-text>
-                <v-card-text v-if="!income">
-                    <v-progress-circular indeterminate color="primary"></v-progress-circular>
                 </v-card-text>
                 <v-card-actions>
                     <v-chip prepend-icon="mdi-arrow-down" color="green">
@@ -37,13 +31,10 @@
         </v-col>
 
         <v-col>
-            <v-card elevation="4">
+            <v-card elevation="4" :loading="!props.savingsBudget">
                 <v-card-title class="text-h6 font-weight-bold">Epargne</v-card-title>
                 <v-card-text v-if="income">
                     {{props.savingsBudget}} €
-                </v-card-text>
-                <v-card-text v-if="!income">
-                    <v-progress-circular indeterminate color="primary"></v-progress-circular>
                 </v-card-text>
                 <v-card-actions>
                     <v-chip prepend-icon="mdi-arrow-collapse-vertical" color="red">
@@ -55,13 +46,10 @@
         </v-col>
         
         <v-col>
-            <v-card elevation="4">
+            <v-card elevation="4" :loading="!props.savingsBudget">
                 <v-card-title class="text-h6 font-weight-bold">Total Epargné</v-card-title>
                 <v-card-text v-if="income">
                     12'560 €
-                </v-card-text>
-                <v-card-text v-if="!income">
-                    <v-progress-circular indeterminate color="primary"></v-progress-circular>
                 </v-card-text>
                 <v-card-actions>
                     <v-chip prepend-icon="mdi-arrow-up" color="green">

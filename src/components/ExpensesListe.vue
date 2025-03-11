@@ -5,7 +5,11 @@
         
         <v-icon @click="viewExpense">mdi-plus-box</v-icon>
     </v-card-title>
-    <v-table density="compact" fixed-header hover>
+    <v-table 
+      density="compact"
+      fixed-header hover
+      :loading="isloading"
+    >
       <thead>
         <tr>
           <th class="text-left">
@@ -15,6 +19,9 @@
             Nom
           </th>
           <th class="text-left">
+            Categorie
+          </th>
+          <th class="text-left">
             Date
           </th>
           <th class="text-left">
@@ -22,7 +29,7 @@
           </th>
         </tr>
       </thead>
-      <tbody v-if="!isloading && Expenses">
+      <tbody v-if="Expenses">
         <tr
           v-for="(expense, index) in Expenses"
           :key="index"
@@ -31,6 +38,7 @@
         >
           <td> <v-img id="icon" :src='expense.logo.path'/> </td>
           <td>{{ expense.name }}</td>
+          <td>{{ expense.logo.category }}</td>
           <td>{{ expense.date }}</td>
           <td>{{ expense.amount }}€</td>
         </tr>
@@ -38,7 +46,6 @@
     </v-table>
   </v-card>
 </template>
-
   
 <script setup lang="ts">
   import { defineProps, watch, defineEmits  } from "vue";

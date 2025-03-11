@@ -1,8 +1,8 @@
 <template>
-    <v-card elevation="4" >
+    <v-card elevation="4" :loading="!getAllCategories">
         <h2>{{ title }}</h2>
         <div class="GlobaleCard">
-            <v-list-item v-for="(category) in getAllCategories">
+            <v-list-item v-for="(category) in getAllCategories" v-if="getAllCategories">
                 <v-card style="display: flex;">
                     <v-progress-circular
                         class="progressBar"
@@ -30,18 +30,18 @@
 </template>
     
 <script setup lang="ts">
-    import { defineProps, watch } from "vue";
-    import { category } from "@/data/Categories";
-    import { getLogoByName } from "@/data/logos";
+    import { defineProps, watch, defineEmits } from "vue";
     import type { BudgetCategories  } from "@/interfaces/BudgetCategories";
     import useUserStore from '@/stores/userStore';
     import type { ExpenseDTO } from "@/interfaces/ExpenseDto";
+    import { category } from "@/data/Categories";
+    import { getLogoByName } from "@/data/logos";
 
     let income = ref<number>(0);
     let getAllCategories = ref<BudgetCategories[]>();
+    const emit = defineEmits();
     const userStore = useUserStore();
     const props = defineProps(["expenses", "title"]);
-    const colors = ['#00feff', '#00b9ff', '#004eff', '#8400ff', '#de00ff', '#ff00bd', '#ff003d', '#00ffde', '#00ff77', '#8aff00', '#fff800', '#ffb300', '#ff7300'];
 
     /**
      * onMounted - waits for the DOM to be completely rendered.
@@ -51,23 +51,29 @@
     });
 
     /**
-     * watch -
+     * watch - expenses.
      */
     watch(
         () => props.expenses,
         (Expenses) => {
-
-            createtableCategory(Expenses)
+            createtableCategory(Expenses, income.value);
         },
         { deep: true }
     );
 
     /**
-     * createtableCategory -
+     * createtableCategory - create a Category list with Expenses.
+     * @param {ExpenseDTO[]} Expenses - Array of expense objects containing amount and logo details.
+     * @param {number} income - The monthly income.
+     *
+     * @returns {BudgetCategories[] | undefined} Returns an array of BudgetCategories if found, otherwise undefined.
      */
-    function createtableCategory(Expenses: ExpenseDTO[]) {
+    function createtableCategory(ExpensesList: ExpenseDTO[], income: number){
 
+        getAllCategories.value = [];
+        const colors = ['#00feff', '#00b9ff', '#004eff', '#8400ff', '#de00ff', '#ff00bd', '#ff003d', '#00ffde', '#00ff77', '#8aff00', '#fff800', '#ffb300', '#ff7300'];
         const TableCategories = category;
+        let Expenses = ExpensesList;
         let Newcategory:BudgetCategories;
         let totalCategories = [];
         let isGoodCategory = false;
@@ -75,8 +81,7 @@
         let numberExpenses = 0
         let colorbar = 0;
         let average: { status: string, difference: number } | undefined;
-        getAllCategories.value = [];
-        
+
         TableCategories.forEach(category =>{
             for (let index = 0; index < Expenses.length; index++) {
                 if(Expenses[index].logo.category == category.label){
@@ -89,9 +94,12 @@
                 }
             }
             if(isGoodCategory){
-
-                const pourcentage = Math.round((totalExpenses * 100)/ income.value);
+                let pourcentage = Math.round((totalExpenses * 100)/ income);
                 average = compareSubscription(pourcentage, category.averageSpending);
+
+                if(pourcentage <= 0){
+                    pourcentage = 1;
+                }
 
                 Newcategory = {
                     name: category.name,
@@ -111,16 +119,18 @@
                 totalExpenses = 0;
                 numberExpenses = 0;
                 average = { status: '', difference: 0 };
-
             }
+
             getAllCategories.value = totalCategories;
+
+            if (getAllCategories.value.length > 0){
+                emit('Category-List', getAllCategories.value);
+            }
         });
     }
 
 
     function compareSubscription(abonnementPourcentage: number, average:{min: number; max: number}) {
-
-        
         // Vérification de la validité des entrées
         if (typeof abonnementPourcentage !== 'number' || abonnementPourcentage < 0) {
             throw new Error("Le pourcentage d'abonnement doit être un nombre positif.");
@@ -128,7 +138,7 @@
         if (typeof average.min !== 'number' || typeof average.max !== 'number') {
             throw new Error("Les bornes de la moyenne doivent être des nombres.");
         }
-        
+
         // Si inférieur à la borne minimum
         if (abonnementPourcentage < average.min) {
             return {
@@ -136,7 +146,7 @@
                 difference: (100 * abonnementPourcentage ) / average.max      
             };
         }
-        
+
         // Si supérieur à la borne maximum
         if (abonnementPourcentage > average.max) {
             return {
@@ -144,13 +154,13 @@
             difference: (100 * abonnementPourcentage ) / average.max
             };
         }
-        
+
         // Dans la plage recommandée
         return {
             status: 'mdi-arrow-collapse-vertical',
             difference: (100 * abonnementPourcentage ) / average.max
         };
-        }
+    }
 
 </script>
   
@@ -159,6 +169,7 @@
         max-width: 50vw;
         overflow-y: auto; 
         height: 50vh;
+        min-height: 50vh;
     }
     .progressBar {
         margin: 2px;
