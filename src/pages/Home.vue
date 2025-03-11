@@ -39,7 +39,7 @@
     </v-row>
 
     <v-row class="ma-5">
-        <v-col cols="12" sm="3">
+        <v-col cols="12" sm="4">
             <budgetOverview
                 :expenses="AllExpenses"
                 title="Categorie des dépenses"
@@ -48,17 +48,19 @@
         
         <v-col cols="12" sm="4">
             <VisualRepresentation
+                v-if="chartData && chartOptions"
+                :chartData="chartData"
+                :chartOptions="chartOptions"
+                title="Categorie des dépenses"
             ></VisualRepresentation>
         </v-col>
 
-        <v-col cols="12" sm="5">
-            <v-card>
-
-                <BudgetOptimizer
+        <v-col cols="12" sm="4">
+            <BudgetOptimizer
                 :expenses="AllExpenses"
                 title="Nos recomandations"
+                @category-List="PrepareGraphicData"
             ></BudgetOptimizer>
-            </v-card>
         </v-col>
     </v-row>
 </template>
@@ -80,6 +82,7 @@
     import type { User } from 'firebase/auth';
     import { getTotalPriceOfExpenses, getUserExpenses } from '@/services/expenseService';
     import type { Expense } from '@/interfaces/Expense';
+import type { BudgetCategories } from '@/interfaces/BudgetCategories';
 
     let monthlyExpenses = ref<ExpenseDTO[]>();
     let ExpensesOfMonth = ref<ExpenseDTO[]>();
@@ -89,6 +92,8 @@
     let newExpense = ref<boolean>(false);
     let currentUser: User | null;
     let openModal = ref(false);
+    let chartData = ref<{labels: string[], datasets: [{ label: string; data: number[]; backgroundColor: string[]; }]}>();
+    let chartOptions = ref<{responsive: boolean, maintainAspectRatio: boolean}>();
     const dialogExpenses = ref(false);
     const userStore = useUserStore();
     const selectedExpense = ref<Expense | null>();
@@ -141,6 +146,34 @@
             savingsBudget.value = 50;
         }
     };
+
+
+    function PrepareGraphicData(categories: BudgetCategories[]) {
+
+        let labels: string[] = [];
+        let data: number[] = [];
+        let color: string[] = [];
+
+        categories.forEach(category => {
+            labels.push(category.name);
+            data.push(category.proportion)
+            color.push(category.color)
+        });
+
+        chartData.value = {
+            labels: labels,
+            datasets: [{
+                label: 'Catégories',
+                data: data,
+                backgroundColor: color,
+            }],
+        };
+
+        chartOptions.value = {
+            responsive: true,
+            maintainAspectRatio: false,
+        };
+    }
 
     /**
      * openModal - Open Modal to créate new Expenses or view selected expense.
