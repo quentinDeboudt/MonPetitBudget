@@ -1,8 +1,8 @@
 <template>
-    <v-card elevation="4">
+    <v-card elevation="4" :loading="!getAllCategories">
         <h2>{{ title }}</h2>
-        <div class="GlobaleCard" v-if="getAllCategories">
-            <v-list-item v-for="(category) in getAllCategories">
+        <div class="GlobaleCard">
+            <v-list-item v-for="(category) in getAllCategories" v-if="getAllCategories">
                 <v-card style="display: flex;">
                     <v-progress-circular
                         class="progressBar"
@@ -70,6 +70,7 @@
      */
     function createtableCategory(ExpensesList: ExpenseDTO[], income: number){
 
+        getAllCategories.value = [];
         const colors = ['#00feff', '#00b9ff', '#004eff', '#8400ff', '#de00ff', '#ff00bd', '#ff003d', '#00ffde', '#00ff77', '#8aff00', '#fff800', '#ffb300', '#ff7300'];
         const TableCategories = category;
         let Expenses = ExpensesList;
@@ -168,6 +169,7 @@
         max-width: 50vw;
         overflow-y: auto; 
         height: 50vh;
+        min-height: 50vh;
     }
     .progressBar {
         margin: 2px;

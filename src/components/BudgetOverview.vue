@@ -1,5 +1,5 @@
 <template>
-    <v-card elevation="4">
+    <v-card elevation="4" :loading="!getAllCategories">
         <h2>{{ title }}</h2>
         <div class="GlobaleCard">
             <v-list-item v-for="(category) in getAllCategories">
@@ -57,7 +57,6 @@
     watch(
         () => props.expenses,
         (Expenses) => {
-
             createtableCategory(Expenses)
         },
         { deep: true }
@@ -68,6 +67,7 @@
      */
     function createtableCategory(Expenses: ExpenseDTO[]) {
 
+        getAllCategories.value = [];
         const TableCategories = category;
         let Newcategory:BudgetCategories;
         let totalCategories = [];
@@ -75,7 +75,6 @@
         let totalExpenses = 0;
         let numberExpenses = 0
         let colorbar = '';
-        getAllCategories.value = [];
         
         TableCategories.forEach(category =>{
             for (let index = 0; index < Expenses.length; index++) {
