@@ -47,15 +47,17 @@
         </v-col>
         
         <v-col cols="12" sm="4">
-            <BudgetOptimizer
-                :expenses="AllExpenses"
-                title="Nos recomandations"
-            ></BudgetOptimizer>
+            <VisualRepresentation
+            ></VisualRepresentation>
         </v-col>
 
         <v-col cols="12" sm="5">
             <v-card>
-                <VisualRepresentation></VisualRepresentation>
+
+                <BudgetOptimizer
+                :expenses="AllExpenses"
+                title="Nos recomandations"
+            ></BudgetOptimizer>
             </v-card>
         </v-col>
     </v-row>

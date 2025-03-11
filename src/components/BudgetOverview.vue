@@ -1,30 +1,32 @@
 <template>
-    <v-card elevation="4" class="GlobaleCard">
-        <h4>{{ title }}</h4>
-        <v-list-item v-for="(category) in getAllCategories">
-            <v-card elevation="2" class="CardStyled">
-                <div class="item">
-                    <div class="elem"> 
-                        <div>
-                            <v-img  class="icon" :src="category.logo.path"></v-img>
+    <v-card elevation="4">
+        <h2>{{ title }}</h2>
+        <div class="GlobaleCard">
+            <v-list-item v-for="(category) in getAllCategories">
+                <v-card elevation="2" class="CardStyled">
+                    <div class="item">
+                        <div class="elem"> 
+                            <div>
+                                <v-img  class="icon" :src="category.logo.path"></v-img>
+                            </div>
+                            <div>
+                                <v-list-item-title class="font-weight-bold">{{ category.name }}</v-list-item-title>
+                                <v-list-item-subtitle>{{ category.numberExpenses }} dépenses - {{ category.proportion }}%</v-list-item-subtitle>
+                            </div>
                         </div>
-                        <div>
-                            <v-list-item-title class="font-weight-bold">{{ category.name }}</v-list-item-title>
-                            <v-list-item-subtitle>{{ category.numberExpenses }} dépenses - {{ category.proportion }}%</v-list-item-subtitle>
+                        
+                        <div class="elem">
+                        <v-list-item-action>
+                            <span class="font-weight-bold">-{{ category.amounts }}€</span>
+                        </v-list-item-action>
                         </div>
                     </div>
-                    
-                    <div class="elem">
-                    <v-list-item-action>
-                        <span class="font-weight-bold">-{{ category.amounts }}€</span>
-                    </v-list-item-action>
+                    <div class="containerCase">
+                        <div class="case" :style="{backgroundColor: category.color, width:category.proportion+'%' }" ></div>
                     </div>
-                </div>
-                <div class="containerCase">
-                    <div class="case" :style="{backgroundColor: category.color, width:category.proportion+'%' }" ></div>
-                </div>
-            </v-card>
-        </v-list-item>
+                </v-card>
+            </v-list-item>
+        </div>
     </v-card>
 </template>
     

@@ -1,6 +1,6 @@
 
 export const category = [
-  { name: "Alimentation", logo:'Grande surface', label: 'alimentation', averageSpending:{min: 0, max: 0}},
+  { name: "Alimentation", logo:'Grande surface', label: 'alimentation', averageSpending:{min: 12, max: 25}},
   { name: "vie quotidienn", logo:'Soin du corp', label: 'vie-quotidienne', averageSpending:{min: 0, max: 0}},
   { name: "Shopping", logo:'Vêtements', label: 'Shopping', averageSpending:{min: 5, max: 10}},
   { name: "Transport", logo:'Taxi', label: 'Transport', averageSpending:{min: 10, max: 15}},
@@ -11,7 +11,7 @@ export const category = [
   { name: "Numérique", logo:'Achats high tech', label: 'Numérique', averageSpending:{min: 0, max: 0}},
   { name: "Loisire", logo:'Restaurant', label: 'Loisire', averageSpending:{min: 10, max: 15}},
   { name: "Vacances", logo:'Transport', label: 'Vacances', averageSpending:{min: 0, max: 0}},
-  { name: "Annimeaux", logo:'Vétérinaire', label: 'Annimeaux', averageSpending:{min: 0, max: 0}},
+  { name: "Annimeaux", logo:'Vétérinaire', label: 'Annimeaux', averageSpending:{min: 9, max: 16}},
   { name: "Abonnement numériques", logo:'Netflix', label: 'Abonnement', averageSpending:{min: 5, max: 10}},
   { name: "Impots / Taxes", logo:'Impôt sur le revenu', label: 'Impots-Taxes', averageSpending:{min: 0, max: 0}},
   { name: "Autre depense", logo:'Cadeau', label: 'Autre', averageSpending:{min: 0, max: 0}},

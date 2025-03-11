@@ -1,26 +1,31 @@
 <template>
     <v-card elevation="4" >
-        <h4>{{ title }}</h4>
-        <v-list-item v-for="(category) in getAllCategories">
-            <v-card >
-                <div>
-                    <v-img  class="icon" :src="category.logo.path"></v-img>
-                </div>
-                <div>
-                    <v-list-item-title class="font-weight-bold">{{ category.name }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ category.numberExpenses }} dépenses - {{ category.proportion }}%</v-list-item-subtitle>
+        <h2>{{ title }}</h2>
+        <div class="GlobaleCard">
+            <v-list-item v-for="(category) in getAllCategories">
+                <v-card style="display: flex;">
+                    <v-progress-circular
+                        class="progressBar"
+                        :color="category.color"
+                        :model-value="(category.average.difference)"
+                        :size="70"
+                        :width="12"
+                    ><v-avatar :image="category.logo.path"></v-avatar></v-progress-circular>
 
-                    <div v-if="category.average" >
-                        <v-chip :prepend-icon="category.average.status" color="green">
-                        {{category.average.difference}}%
-                        </v-chip>
-                        -{{ category.amounts }}€
-                        <p> En moyenne, la categorie {{ category.name }} ce situe entre {{ category.min }}% et {{ category.max }}% du revenue.</p>
-                    </div>
-                    
-                </div>
-            </v-card>
-        </v-list-item>
+                    <v-card elevation="2" class="detailedCategories">
+                        <v-list-item-title class="font-weight-bold">{{ category.name }}- {{ category.proportion }}%</v-list-item-title>
+
+                        <v-list-item-subtitle>
+                            <p>Entre <span>{{ category.min }}%</span> - <span>{{ category.max }}%</span> du revenu.</p>
+                        </v-list-item-subtitle>
+                            
+                        <v-list-item-action>
+                            <p>-{{ category.amounts }}€</p>
+                        </v-list-item-action>
+                    </v-card>
+                </v-card>
+            </v-list-item>
+        </div>
     </v-card>
 </template>
     
@@ -127,8 +132,8 @@
         // Si inférieur à la borne minimum
         if (abonnementPourcentage < average.min) {
             return {
-            status: 'mdi-arrow-up',
-            difference: average.min - abonnementPourcentage
+                status: 'mdi-arrow-up',
+                difference: (100 * abonnementPourcentage ) / average.max      
             };
         }
         
@@ -136,37 +141,33 @@
         if (abonnementPourcentage > average.max) {
             return {
             status: 'mdi-arrow-down',
-            difference: abonnementPourcentage - average.max
+            difference: (100 * abonnementPourcentage ) / average.max
             };
         }
         
         // Dans la plage recommandée
         return {
             status: 'mdi-arrow-collapse-vertical',
-            difference: abonnementPourcentage - average.max
+            difference: (100 * abonnementPourcentage ) / average.max
         };
         }
 
 </script>
   
 <style scoped>
-    .test {
-        border: 1px green solid;
-        width: 5vw;
-        height: 40vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
+    .GlobaleCard{
+        max-width: 50vw;
+        overflow-y: auto; 
+        height: 50vh;
     }
-    .averageExpenses {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        border: 1px red solid;
+    .progressBar {
+        margin: 2px;
     }
-    .spendingSlider {
-        position: relative;
-        border-top: 5px black solid ;
-        width: 5vw;
+    .detailedCategories {
+        margin: 4px;
+        width: 28vw;
+    }
+    .detailedCategories span{
+        font-weight: 800;
     }
 </style>
