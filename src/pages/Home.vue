@@ -1,5 +1,6 @@
 <template class="home">
-     <!-- Modal to create an expense -->
+
+    <!-- Modal to create an expense -->
     <ModalExpenses
         v-if="openModal && selectedExpense && currentUser?.uid"
         :expense="selectedExpense"
@@ -8,6 +9,14 @@
         :idUser="currentUser?.uid"
         @update:dialog="closeModal($event)" 
     />
+
+    <!-- Snackbar -->
+    <v-snackbar v-model="snackbar" timeout="3000" color="success">
+      {{ snackbarTexte }}
+      <template v-slot:actions>
+        <v-btn color="white" @click="snackbar = false">Fermer</v-btn>
+      </template>
+    </v-snackbar>
 
     <AppBar @update:reloadData="fetchExpenses($event)" ></AppBar>
 
@@ -48,11 +57,17 @@
         
         <v-col cols="12" sm="4">
             <VisualRepresentation
-                v-if="chartData && chartOptions"
+                v-if="chartData"
                 :chartData="chartData"
                 :chartOptions="chartOptions"
                 title="Categorie des dépenses"
             ></VisualRepresentation>
+
+            <v-card elevation="6" v-if="loadingData && !chartData" :loading="loadingData">
+                <div class="GlobaleCard">
+                    <h2>Categorie des dépenses</h2>
+                </div>
+            </v-card>
         </v-col>
 
         <v-col cols="12" sm="4">
@@ -82,7 +97,7 @@
     import type { User } from 'firebase/auth';
     import { getTotalPriceOfExpenses, getUserExpenses } from '@/services/expenseService';
     import type { Expense } from '@/interfaces/Expense';
-import type { BudgetCategories } from '@/interfaces/BudgetCategories';
+    import type { BudgetCategories } from '@/interfaces/BudgetCategories';
 
     let monthlyExpenses = ref<ExpenseDTO[]>();
     let ExpensesOfMonth = ref<ExpenseDTO[]>();
@@ -94,7 +109,10 @@ import type { BudgetCategories } from '@/interfaces/BudgetCategories';
     let openModal = ref(false);
     let chartData = ref<{labels: string[], datasets: [{ label: string; data: number[]; backgroundColor: string[]; }]}>();
     let chartOptions = ref<{responsive: boolean, maintainAspectRatio: boolean}>();
+    let loadingData = ref<boolean>();
     const dialogExpenses = ref(false);
+    const snackbar = ref(false);
+    const snackbarTexte = ref<string>();
     const userStore = useUserStore();
     const selectedExpense = ref<Expense | null>();
     const titleExpenses = ['Dépenses hebdomadaires', 'Dépenses ponctuelles', 'Répartition des dépenses'];
@@ -116,6 +134,7 @@ import type { BudgetCategories } from '@/interfaces/BudgetCategories';
     });
 
     async function fetchExpenses(currentMonth: {year: number, month: number}) {
+        loadingData.value = true;
         if(currentUser && currentMonth){
 
             ExpensesOfMonth.value = [];
@@ -144,6 +163,8 @@ import type { BudgetCategories } from '@/interfaces/BudgetCategories';
             totalPriceOfExpenses.value = await getTotalPriceOfExpenses(currentUser.uid, currentMonth)
 
             savingsBudget.value = 50;
+
+            loadingData.value = false;
         }
     };
 
@@ -200,15 +221,24 @@ import type { BudgetCategories } from '@/interfaces/BudgetCategories';
     /**
      * closeModal - close Modal to créate new Expenses or view selected expense.
      */
-    function closeModal(reopenModal: boolean) {
-        if(reopenModal && userStore.currentUser?.uid){
-            fetchExpenses({year: 2025, month: 3});
+    function closeModal(data: {reloadPage: boolean, snackbarTexte: string}) {
+
+        if(data.reloadPage && userStore.currentUser?.uid){
+            fetchExpenses({year: today.year, month: today.month});
+            snackbarTexte.value = data.snackbarTexte;
+            snackbar.value = true;
         }
         dialogExpenses.value = false;
         openModal.value = false;
     }
+  
 </script>
 
 <style scoped>
-
+    .GlobaleCard{
+        max-width: 50vw;
+        overflow-y: auto; 
+        height: 50vh;
+        min-height: 50vh;
+    }
 </style>

@@ -1,5 +1,5 @@
 import { db } from '../plugins/firebase';
-import { collection, doc, getDocs, addDoc, getDoc, query, where, deleteDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, addDoc, getDoc, query, where, deleteDoc, setDoc } from 'firebase/firestore';
 import type { ExpenseDTO } from '../interfaces/ExpenseDto';
 import type { Expense } from '@/interfaces/Expense';
 import type { params } from '@/interfaces/parameter';
@@ -68,7 +68,7 @@ export async function getUserExpenses({
  * @param expense Objet contenant les détails de la dépense
  * @returns L'ID du document ajouté ou null en cas d'erreur
  */
-export async function addExpense(idUser: string, expense: Expense) {
+export async function addExpense(idUser: string, expense: Expense): Promise<string> {
     try {
         console.log("expense créer:", expense )
         const userDocRef = doc(db, 'users', idUser);
@@ -81,10 +81,11 @@ export async function addExpense(idUser: string, expense: Expense) {
             const month = parseFloat(expense.date.split('-')[1]);
             const year = parseFloat(expense.date.split('-')[0]);
 
-            const generateId =  Math.random().toString(36).substr(2, 9);
+            const expenseDocRef = doc(expensesRefInit);
+            const expenseId = expenseDocRef.id
 
-            await addDoc(expensesRefInit, {
-                id: generateId,
+            await setDoc(expenseDocRef,  {
+                id: expenseId,
                 name: expense.name,
                 date: {
                     day: day, 
@@ -98,9 +99,9 @@ export async function addExpense(idUser: string, expense: Expense) {
         }
     }catch (error) {
         console.error("Erreur lors de l'insertion de la dépense:", error);
-        return []
+        return `Erreur lors de l'insertion de la dépense: ${expense.name}`;
     }
-    return [];
+    return `La dépense ${expense.name}, est bien ajoutée.`;
 }
 
 /**
@@ -112,13 +113,15 @@ export async function addExpense(idUser: string, expense: Expense) {
 export async function deleteExpense(idUser: string, expense: Expense) {
     try {
         if (expense) {
-            const expenseRef = doc(db, 'users', idUser, 'expenses', expense.name);
+            const expenseRef = doc(db, 'users', idUser, 'expenses', expense.id.toString());
             await deleteDoc(expenseRef);
         }
         
     } catch (error) {
-    console.error(`❌ Erreur lors de la suppression de la dépense:`, error)
+        console.error(`❌ Erreur lors de la suppression de la dépense:`, error);
+        return `Erreur lors de la suppression de la dépense: ${expense.name}`;
     }
+    return `dépense ${expense.name} supprimée !`;
 }
 
 /**
