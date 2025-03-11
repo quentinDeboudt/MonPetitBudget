@@ -7,16 +7,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Abonnement: typeof import('./components/Abonnement.vue')['default']
     AppBar: typeof import('./components/AppBar.vue')['default']
-    Budget: typeof import('./components/Budget.vue')['default']
     BudgetOptimizer: typeof import('./components/BudgetOptimizer.vue')['default']
     BudgetOverview: typeof import('./components/BudgetOverview.vue')['default']
     Calendar: typeof import('./components/Calendar.vue')['default']
-    copy: typeof import('./components/Abonnement copy.vue')['default']
     ExpensesListe: typeof import('./components/ExpensesListe.vue')['default']
     FinanceSummary: typeof import('./components/FinanceSummary.vue')['default']
-    Header: typeof import('./components/header.vue')['default']
     ModalExpenses: typeof import('./components/ModalExpenses.vue')['default']
     Param: typeof import('./components/param.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
