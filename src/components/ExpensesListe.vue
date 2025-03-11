@@ -15,6 +15,9 @@
             Nom
           </th>
           <th class="text-left">
+            Categorie
+          </th>
+          <th class="text-left">
             Date
           </th>
           <th class="text-left">
@@ -31,6 +34,7 @@
         >
           <td> <v-img id="icon" :src='expense.logo.path'/> </td>
           <td>{{ expense.name }}</td>
+          <td>{{ expense.logo.category }}</td>
           <td>{{ expense.date }}</td>
           <td>{{ expense.amount }}€</td>
         </tr>

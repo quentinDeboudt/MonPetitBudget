@@ -1,5 +1,5 @@
 import { db } from '../plugins/firebase';
-import { collection, doc, getDocs, addDoc, getDoc, Timestamp, query, where, type WhereFilterOp, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, addDoc, getDoc, query, where, deleteDoc } from 'firebase/firestore';
 import type { ExpenseDTO } from '../interfaces/ExpenseDto';
 import type { Expense } from '@/interfaces/Expense';
 import type { params } from '@/interfaces/parameter';
