@@ -68,7 +68,7 @@ export async function getUserExpenses({
  * @param expense Objet contenant les détails de la dépense
  * @returns L'ID du document ajouté ou null en cas d'erreur
  */
-export async function addExpense(idUser: string, expense: Expense): Promise<string> {
+export async function addExpense(idUser: string, expense: Expense, isNewExpense: boolean): Promise<string> {
     try {
         console.log("expense créer:", expense )
         const userDocRef = doc(db, 'users', idUser);
@@ -99,9 +99,20 @@ export async function addExpense(idUser: string, expense: Expense): Promise<stri
         }
     }catch (error) {
         console.error("Erreur lors de l'insertion de la dépense:", error);
-        return `Erreur lors de l'insertion de la dépense: ${expense.name}`;
+        
+
+        if(isNewExpense){
+            return `Erreur lors de l'insertion de la dépense: ${expense.name}`;
+        }else{
+            return `Erreur lors de la modification de la dépense: ${expense.name}`;
+        }
+
     }
-    return `La dépense ${expense.name}, est bien ajoutée.`;
+    if(isNewExpense){
+        return `La dépense ${expense.name}, est bien ajoutée.`;
+    }else{
+        return `La dépense ${expense.name}, est bien Modifier.`;
+    }
 }
 
 /**

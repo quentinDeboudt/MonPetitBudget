@@ -91,10 +91,12 @@
    */
   async function submit() {
     if(expenseLocal.value){
-      let message = await addExpense(props.idUser, expenseLocal.value);
+
+      const isNewExpense = true;//TODO: Il faut changer la valeur si ce n'est pas une nouvelles dépense.
+
+      let message = await addExpense(props.idUser, expenseLocal.value, isNewExpense);
       closeModal(true, message);
     }
-    
   }
 
   /**
