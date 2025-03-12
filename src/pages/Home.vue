@@ -11,8 +11,8 @@
     />
 
     <!-- Snackbar -->
-    <v-snackbar v-model="snackbar" timeout="3000" color="success">
-      {{ snackbarTexte }}
+    <v-snackbar v-model="snackbar" timeout="3000" :color="snackbarValue?.color">
+      {{ snackbarValue?.message }}
       <template v-slot:actions>
         <v-btn color="white" @click="snackbar = false">Fermer</v-btn>
       </template>
@@ -112,7 +112,7 @@
     let loadingData = ref<boolean>();
     const dialogExpenses = ref(false);
     const snackbar = ref(false);
-    const snackbarTexte = ref<string>();
+    const snackbarValue = ref<{ color: string; message: string; }>();
     const userStore = useUserStore();
     const selectedExpense = ref<Expense | null>();
     const titleExpenses = ['Dépenses hebdomadaires', 'Dépenses ponctuelles', 'Répartition des dépenses'];
@@ -221,11 +221,11 @@
     /**
      * closeModal - close Modal to créate new Expenses or view selected expense.
      */
-    function closeModal(data: {reloadPage: boolean, snackbarTexte: string}) {
+    function closeModal(data: {reloadPage: boolean, snackbarTexte: { color: string; message: string; }}) {
 
         if(data.reloadPage && userStore.currentUser?.uid){
             fetchExpenses({year: today.year, month: today.month});
-            snackbarTexte.value = data.snackbarTexte;
+            snackbarValue.value = data.snackbarTexte;
             snackbar.value = true;
         }
         dialogExpenses.value = false;

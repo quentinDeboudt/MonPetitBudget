@@ -2,7 +2,7 @@
   <v-dialog v-model="OpenModal" v-if="expenseLocal" locale="fr" persistent max-width="800px">
     <v-card>
       <v-card-title class="d-flex justify-space-between">
-        <span v-if="expense?.id">Modifier la dépense</span>
+        <span v-if="!props.newExpense">Modifier la dépense</span>
         <span v-else>Ajouter une dépense</span>
         <v-btn color="red" icon="$close" @click="closeModal(false)"></v-btn>
       </v-card-title>
@@ -10,6 +10,20 @@
       <v-card-text>
         <div class="positionInput">
           <v-text-field class="styledInput" v-model="expenseLocal.name" label="Nom de la dépense"></v-text-field>
+
+          <v-autocomplete
+            class="styledInput"
+            v-model="expenseLocal.name"
+            item-value="name"
+            item-text="name"
+            dense
+            solo
+            label="Nom de la dépense"
+            :items="filteredExpenseNames"
+            @update:search-input="filterItems"
+          ></v-autocomplete>
+
+
           <v-text-field class="styledInput" v-model="expenseLocal.amount" label="Price €" type="number"></v-text-field>
         </div>
         <div class="positionInput">
@@ -57,7 +71,7 @@
 <script setup lang="ts">
   import { defineProps, defineEmits, ref, watch } from 'vue';
   import SelectLogo from './SelectLogo.vue';
-  import { addExpense, deleteExpense } from "@/services/expenseService";
+  import { addExpense, deleteExpense, modifyExpense } from "@/services/expenseService";
   import type { Expense } from '@/interfaces/Expense';
 
   const emit = defineEmits(['update:dialog']);
@@ -70,6 +84,38 @@
   let OpenModal = ref<boolean>();
 
   let expenseLocal = ref<Expense>({ id: 0, name: '', date: '', logo: { name: '', path: '', category: '' }, amount: 0, category: '' });
+
+  const expenseNames = ref([
+    'Carrefour',
+    'Carte Bleue',
+    'Caisse',
+    'Essence',
+    'Alimentation',
+    'Vêtements',
+    'Abonnement',
+    'Loisirs',
+    'coiffeur',
+    'loyer',
+    'Rennes',
+  ]);
+
+  const filteredExpenseNames = ref<string[]>(expenseNames.value);
+
+  // Filtrer les éléments en fonction de ce que l'utilisateur tape
+  function filterItems(input: string) {
+
+    if (input.trim() === '') {
+      filteredExpenseNames.value = [];
+    } else {
+      filteredExpenseNames.value = expenseNames.value.filter(item =>
+        item.toLowerCase().startsWith(input.toLowerCase())
+      );
+    }
+  };
+
+
+
+
   
   /**
    * watch - watches the expense to update the data to be displayed.
@@ -92,10 +138,13 @@
   async function submit() {
     if(expenseLocal.value){
 
-      const isNewExpense = true;//TODO: Il faut changer la valeur si ce n'est pas une nouvelles dépense.
-
-      let message = await addExpense(props.idUser, expenseLocal.value, isNewExpense);
-      closeModal(true, message);
+      if(props.newExpense){
+        let message = await addExpense(props.idUser, expenseLocal.value, );
+        closeModal(true, message);
+      }else {
+        let message = await modifyExpense(props.idUser, expenseLocal.value, );
+        closeModal(true, message);
+      }
     }
   }
 
@@ -112,7 +161,7 @@
   /**
    * closeModal - closes the modal.
    */
-  const closeModal = (reloadPage: boolean, message: string) => {
+  const closeModal = (reloadPage: boolean, message?: { color: string; message: string; }) => {
     emit('update:dialog', {reloadPage: reloadPage, snackbarTexte: message});
     OpenModal.value = false;
   };
