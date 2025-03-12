@@ -1,26 +1,26 @@
-/**
- * plugins/vuetify.ts
- *
- * Framework documentation: https://vuetifyjs.com`
- */
-
-// Styles
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import { VCalendar } from 'vuetify/labs/VCalendar';
-
-
-// Composables
 import { createVuetify } from 'vuetify'
+import { getDarkMode } from '@/services/userService';
 
-// https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
+let darkMode = false; // Valeur par défaut
+const userId = "HkiloN5Z56hIEo3jMepT8KRxyKz2";
+
+getDarkMode(userId).then((mode) => {
+  darkMode = mode;
+});
+
 export default createVuetify({
   components: {
     VCalendar,
   },
-
   theme: {
-    defaultTheme: 'light',
+    defaultTheme: darkMode ? "dark" : "light",
+    themes: {
+        dark: { dark: true },
+        light: { dark: false },
+    },
   },
   // locale: {
   //   locale: 'fr',
