@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppBar: typeof import('./components/AppBar.vue')['default']
+    AutocompleteInput: typeof import('./components/AutocompleteInput.vue')['default']
     BudgetOptimizer: typeof import('./components/BudgetOptimizer.vue')['default']
     BudgetOverview: typeof import('./components/BudgetOverview.vue')['default']
     Calendar: typeof import('./components/Calendar.vue')['default']
