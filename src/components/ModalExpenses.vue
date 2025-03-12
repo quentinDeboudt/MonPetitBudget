@@ -9,7 +9,7 @@
 
       <v-card-text>
         <div class="positionInput">
-          <AutocompleteInput class="styledInput" style="padding: 0;" v-model="expenseLocal.name" :expenseNames="expenseNames" ></AutocompleteInput>
+          <AutocompleteInput class="styledInput" style="padding: 0;" v-model="expenseLocal.name"></AutocompleteInput>
           <v-text-field class="styledInput" v-model="expenseLocal.amount" label="Price €" type="number"></v-text-field>
         </div>
         <div class="positionInput">
@@ -72,38 +72,6 @@
 
   let expenseLocal = ref<Expense>({ id: 0, name: '', date: '', logo: { name: '', path: '', category: '' }, amount: 0, category: '' });
 
-  const expenseNames = ref([
-    'Carrefour',
-    'Carte Bleue',
-    'Caisse',
-    'Essence',
-    'Alimentation',
-    'Vêtements',
-    'Abonnement',
-    'Loisirs',
-    'coiffeur',
-    'loyer',
-    'Rennes',
-  ]);
-
-  const filteredExpenseNames = ref<string[]>(expenseNames.value);
-
-  // Filtrer les éléments en fonction de ce que l'utilisateur tape
-  function filterItems(input: string) {
-
-    if (input.trim() === '') {
-      filteredExpenseNames.value = [];
-    } else {
-      filteredExpenseNames.value = expenseNames.value.filter(item =>
-        item.toLowerCase().startsWith(input.toLowerCase())
-      );
-    }
-  };
-
-
-
-
-  
   /**
    * watch - watches the expense to update the data to be displayed.
    */

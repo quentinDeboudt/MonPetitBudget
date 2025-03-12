@@ -29,10 +29,6 @@ import { ref, watch } from 'vue';
 
 export default {
   props: {
-    expenseNames: {
-      type: Array,
-      required: true,
-    },
     modelValue: {
       type: String,
       default: '',
