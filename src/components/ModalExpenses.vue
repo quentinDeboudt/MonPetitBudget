@@ -9,21 +9,7 @@
 
       <v-card-text>
         <div class="positionInput">
-          <v-text-field class="styledInput" v-model="expenseLocal.name" label="Nom de la dépense"></v-text-field>
-
-          <v-autocomplete
-            class="styledInput"
-            v-model="expenseLocal.name"
-            item-value="name"
-            item-text="name"
-            dense
-            solo
-            label="Nom de la dépense"
-            :items="filteredExpenseNames"
-            @update:search-input="filterItems"
-          ></v-autocomplete>
-
-
+          <AutocompleteInput class="styledInput" style="padding: 0;" v-model="expenseLocal.name" :expenseNames="expenseNames" ></AutocompleteInput>
           <v-text-field class="styledInput" v-model="expenseLocal.amount" label="Price €" type="number"></v-text-field>
         </div>
         <div class="positionInput">
@@ -35,7 +21,7 @@
           ></v-autocomplete>
           <v-text-field class="styledInput" v-model="expenseLocal.date" label="Date" type="date"></v-text-field>
 
-          <SelectLogo v-if="expenseLocal" v-model="expenseLocal.logo" />
+          <SelectLogo class="styledInput" v-if="expenseLocal" v-model="expenseLocal.logo" />
         </div>
 
         <v-card elevation="4" class="card">
@@ -73,6 +59,7 @@
   import SelectLogo from './SelectLogo.vue';
   import { addExpense, deleteExpense, modifyExpense } from "@/services/expenseService";
   import type { Expense } from '@/interfaces/Expense';
+  import AutocompleteInput from './AutocompleteInput.vue';
 
   const emit = defineEmits(['update:dialog']);
   const props = defineProps<{
@@ -170,6 +157,7 @@
 <style scoped lang="css">
   .styledInput {
     width: min-content;
+    height: fit-content;
     margin-right: 10px;
     margin-left: 10px;
     min-width: 200px;

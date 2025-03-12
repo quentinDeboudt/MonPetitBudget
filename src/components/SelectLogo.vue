@@ -1,5 +1,6 @@
 <template>
   <v-autocomplete
+    style="min-height: 10vh;"
     v-model="selectedLogo"
     :items="logos"
     item-title="name"
