@@ -17,6 +17,7 @@
             label="Type de dépense"
             class="styledInput"
             v-model="expenseLocal.category"
+            clearable
             :items="['mensuellement', 'Ponctuellement']"
           ></v-autocomplete>
           <v-text-field class="styledInput" v-model="expenseLocal.date" label="Date" type="date"></v-text-field>

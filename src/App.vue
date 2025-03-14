@@ -1,53 +1,31 @@
-<template>
-  <v-app id="app">
+<template style="{isDarkMode ? 'background-color: green' : 'background-color: red}">
+  <v-app >
     <router-view />
   </v-app>
 </template>
 
 <script lang="ts" setup>
-  import type { User } from 'firebase/auth';
+  import useUserStore from '@/stores/userStore';
   import { getDarkMode } from './services/userService';
-  import useUserStore from './stores/userStore';
-  import { onMounted, watch } from "vue";
   import { useTheme } from "vuetify";
 
   const theme = useTheme();
-  let currentUser = ref<User | null>();
   const userStore = useUserStore();
-  const darkMode = ref(false);
+  let isDarkMode = ref<Boolean>(false);
 
   /**
-   * onMounted - waits for the DOM to be completely rendered.
+   * watch - watches the User to update theme.
    */
-  onMounted(async () => {
-    currentUser.value = userStore.currentUser;
-
-    if(currentUser.value){
-      getDarkMode( currentUser.value.uid).then((mode) => (darkMode.value = mode));
-      updateBackgroundColor(darkMode.value);
-    }
-
-    // 🔹 Surveiller les changements de thème
-    watch(() => darkMode, (isDarkMode) => {
-      updateBackgroundColor(isDarkMode.value);
-    });
-
-  });
-
-  const updateBackgroundColor = (isDarkMode: boolean) => {
-    if (!isDarkMode) {
-      const balise = document.getElementById("app");
-      
-      if (balise){
-        //'#f5f5f5s'
-        balise.style.backgroundColor = 'red';
+  watch(
+    () => userStore.currentUser,
+    async (user) => {
+      if(user){
+        const darkMode = await getDarkMode(user.uid);
+        isDarkMode.value = darkMode;
+        theme.global.name.value = darkMode ? "dark" : "light";
       }
-    }
-  };
+    },
+    { deep: true, immediate: true }
+  );
+  
 </script>
-
-<style>
-  #app {
-    min-height: 100vh;
-  }
-</style>

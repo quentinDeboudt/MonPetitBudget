@@ -3,7 +3,7 @@
     <div class="designPart">
       <v-img src="/src/assets/logo_bank/login_page.png" />
     </div>
-    <v-img class="logo" src="/src/assets/logo_bank/Logo_mon_petit_budget.png" />
+    <v-img class="logo" src="/src/assets/logo_bank/Logo_mon_petit_budget_dark.png" />
     <div class="loginPart">
       <div v-if="currentUser" class="currentUser">
         <p>Déja connecté en tant que:</p>

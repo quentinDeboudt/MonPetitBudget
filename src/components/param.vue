@@ -4,9 +4,17 @@
         <v-tabs
           v-model="dialogLocal"
         >
-          <v-tab value="Income">Revenus</v-tab>
-          <v-tab value="Diplay">paramètre d'affichage</v-tab>
-          <v-tab value="other">autre paramètre</v-tab>
+          <v-tab value="Income">
+            <v-icon icon="mdi-slot-machine"></v-icon>
+            <p>Revenus</p>
+          </v-tab>
+          <v-tab value="Diplay">
+            <v-icon icon="mdi-palette-advanced"></v-icon>
+            <p>paramètre d'affichage</p></v-tab>
+          <v-tab value="other">
+            <v-icon icon="mdi-arrange-send-backward"></v-icon>
+            <p>autre paramètre</p>
+          </v-tab>
         </v-tabs>
 
         <v-card-text>
@@ -54,7 +62,7 @@
   let currentUser = ref<User | null>();
   let profileImageUrl = ref<string | null>();
   let income = ref<number>();
-  const emit = defineEmits(['update:dialog']);
+  const emit = defineEmits(['update:dialog', 'update:darkMode']);
   const userStore = useUserStore();
   const props = defineProps<{
     dialog: boolean;
@@ -73,7 +81,7 @@
     income.value = userStore.income;
 
     if(currentUser.value){
-      getDarkMode( currentUser.value.uid).then((mode) => (darkMode.value = mode));
+      getDarkMode(currentUser.value.uid).then((mode) => (darkMode.value = mode));
     }
   });
 
@@ -92,6 +100,7 @@
     if(currentUser.value){
       await updateDarkMode(currentUser.value.uid, darkMode.value);
       theme.global.name.value = darkMode.value ? "dark" : "light";
+      emit('update:darkMode', darkMode.value);
     }
   };
 
@@ -110,11 +119,12 @@
     max-width: 800px;
   }
   .card {
-    background-color: #f5f5f5;
+    /* background-color: #f5f5f5; */
   }
 
   .dark-mode{
     background-color: black;
+    border: 1px solid white;
     color: white;
     padding: 6px;
     margin: 5px;
@@ -123,6 +133,7 @@
 
   .light-mode{
     background-color: white;
+    border: 1px solid black;
     color: black;
     padding: 6px;
     margin: 5px;

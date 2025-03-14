@@ -9,8 +9,8 @@
             dense
             solo
         ></v-text-field>
-        
-        <v-list class="autocomplete" v-if="filteredSuggestions.length > 0">
+
+        <v-list style="{isDarkMode ? 'background-color: black' : 'background-color: white}" class="autocomplete" v-if="filteredSuggestions.length > 0">
             <v-list-item 
                 class="autocompleteList"
                 v-for="(item, index) in filteredSuggestions"
@@ -21,12 +21,31 @@
                 <v-divider></v-divider>
             </v-list-item>
         </v-list>
+        
     </v-container>
 </template>
 
 <script lang="ts">
     import { ref, watch } from 'vue';
     import {expenseNames} from '@/data/autocompleteWorld';
+    import useUserStore from '@/stores/userStore';
+    import { getDarkMode } from '@/services/userService';
+
+    let isDarkMode = ref<Boolean>(false);
+    const userStore = useUserStore();
+
+    /**
+     * watch - watches the User to update background color.
+     */
+    watch(
+        () => userStore.currentUser,
+        async (user) => {
+            if(user){
+                isDarkMode.value = await getDarkMode(user.uid);
+            }
+        },
+        { deep: true, immediate: true }
+    );
 
     export default {
         props: {
@@ -65,7 +84,11 @@
                 if (!searchText.value) return word;
                 const search = searchText.value.toLowerCase();
                 const regex = new RegExp(`(${search})`, 'gi');
-                return word.replace(regex, '<span style="background-color: yellow;">$1</span>');
+                if(isDarkMode){
+                    return word.replace(regex, '<span style="background-color: blue;">$1</span>');
+                }else{
+                    return word.replace(regex, '<span style="background-color: yellow;">$1</span>');
+                }
             };
 
             /**
@@ -98,6 +121,7 @@
                 filterSuggestions,
                 highlightMatchingLetters,
                 selectSuggestion,
+                isDarkMode,
             };
         },
     };
@@ -111,7 +135,6 @@
         position: absolute;
         width: fit-content;
         max-height: 30vh;
-        background: white;
         border: 1px solid #ccc;
         min-width: 7vw;
         border-radius: 4px;

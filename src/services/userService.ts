@@ -11,7 +11,6 @@ export async function updateDarkMode(idUser: string, darkMode: boolean) {
     try {
         const userRef = doc(db, "users", idUser);
         await updateDoc(userRef, { darkMode });
-        console.log("Mode mis à jour:", darkMode);
     } catch (error) {
         console.error("Erreur lors de la mise à jour du mode:", error);
     }
@@ -33,5 +32,5 @@ export async function getDarkMode(idUser: string): Promise<boolean> {
     } catch (error) {
         console.error("Erreur lors de la récupération du mode:", error);
     }
-    return false; // Par défaut, on met en mode clair si aucune donnée n'existe
+    return false;// default value.
 }

@@ -1,4 +1,4 @@
-<template class="home">
+<template>
 
     <!-- Modal to create an expense -->
     <ModalExpenses
@@ -98,6 +98,8 @@
     import { getTotalPriceOfExpenses, getUserExpenses } from '@/services/expenseService';
     import type { Expense } from '@/interfaces/Expense';
     import type { BudgetCategories } from '@/interfaces/BudgetCategories';
+import { getDarkMode, updateDarkMode } from '@/services/userService';
+import { useTheme } from 'vuetify';
 
     let monthlyExpenses = ref<ExpenseDTO[]>();
     let ExpensesOfMonth = ref<ExpenseDTO[]>();
@@ -110,6 +112,8 @@
     let chartData = ref<{labels: string[], datasets: [{ label: string; data: number[]; backgroundColor: string[]; }]}>();
     let chartOptions = ref<{responsive: boolean, maintainAspectRatio: boolean}>();
     let loadingData = ref<boolean>();
+    const theme = useTheme();
+    let darkMode = ref<boolean>(false);
     const dialogExpenses = ref(false);
     const snackbar = ref(false);
     const snackbarValue = ref<{ color: string; message: string; }>();
@@ -127,11 +131,22 @@
     onMounted(async () => {
         currentUser = userStore.currentUser
         if(currentUser){
+            toggleDarkMode();
             fetchExpenses({year: today.year, month: today.month});
         }else {
             router.push('/index');
         }
     });
+
+    /**
+     * toggleDarkMode
+     */
+    async function toggleDarkMode(){
+        if(currentUser?.uid){
+            // const darkMode = await getDarkMode(currentUser?.uid);
+            // theme.global.name.value = darkMode ? "dark" : "light";
+        }
+    };
 
     async function fetchExpenses(currentMonth: {year: number, month: number}) {
         loadingData.value = true;
