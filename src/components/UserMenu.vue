@@ -16,7 +16,7 @@
         <v-list>
             <v-list-item>
                 <div class="profilMenu">
-                    <v-avatar :image="profileImageUrl" class="imageProfil" v-bind="mergeProps(menu, tooltip)"></v-avatar>
+                    <v-avatar :image="profileImageUrl" class="imageProfil"></v-avatar>
                     <h4>{{ currentUser?.displayName }}</h4>
                     <h6>{{ currentUser?.email }}</h6>
                 </div>

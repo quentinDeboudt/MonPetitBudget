@@ -25,6 +25,7 @@
   <parameter
     v-if="modalParameter"
     :dialog="dialogParameter"
+    :data="modalParameter"
     @update:dialog="closeModal($event)" 
     @update:darkMode="isDarkMode = $event" 
   />
@@ -36,7 +37,7 @@
   import UserMenu from './UserMenu.vue';
   import useUserStore from '@/stores/userStore';
   import { type User } from 'firebase/auth';
-import { getDarkMode } from '@/services/userService';
+  import { getDarkMode } from '@/services/userService';
 
   let currentUser: User | null;
   let profileImageUrl: string | null;
@@ -66,7 +67,6 @@ import { getDarkMode } from '@/services/userService';
    */
   function openParameters() {
     if(income.value && currentUser?.displayName && profileImageUrl){
-      modalParameter.value = { income: 0, name: '', photoUrl: '' };
       modalParameter.value = { income: income.value, name: currentUser?.displayName, photoUrl: profileImageUrl }; 
       dialogParameter.value = true;
     };

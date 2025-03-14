@@ -1,9 +1,7 @@
 <template>
     <v-dialog v-model="dialogLocal" persistent class="modal">
       <v-card class="card">
-        <v-tabs
-          v-model="dialogLocal"
-        >
+        <v-tabs v-model="dialogLocal">  <!-- TODO: le probleme vient d'ici ! -->
           <v-tab value="Income">
             <v-icon icon="mdi-slot-machine"></v-icon>
             <p>Revenus</p>
@@ -26,6 +24,7 @@
               </v-card-text>
             </v-tabs-window-item>
 
+            
             <v-tabs-window-item value="Diplay">
               <div style="display: flex; align-items: center;">
                 <p class="light-mode">Light Mode</p>
@@ -36,7 +35,6 @@
                 ></v-switch>
                 <p class="dark-mode">Dark Mode </p>
               </div>
-              
             </v-tabs-window-item>
 
             <v-tabs-window-item value="other">
@@ -66,20 +64,23 @@
   const userStore = useUserStore();
   const props = defineProps<{
     dialog: boolean;
+    data: {income: number; name: string; photoUrl:string}
   }>();
   const dialogLocal = ref(props.dialog);
 
   const theme = useTheme();
   const darkMode = ref(false);
 
+  watch(() => props.data, (data) => {
+    profileImageUrl.value = data.photoUrl;
+    income.value = data.income;
+  });
+
   /**
    * onMounted - waits for the DOM to be completely rendered.
    */
   onMounted(async () => {
     currentUser.value = userStore.currentUser;
-    profileImageUrl.value = userStore.profileImageUrl;
-    income.value = userStore.income;
-
     if(currentUser.value){
       getDarkMode(currentUser.value.uid).then((mode) => (darkMode.value = mode));
     }
@@ -112,6 +113,7 @@
     dialogLocal.value = false;
     emit('update:dialog', false);
   };
+
 </script>
   
 <style scoped lang="css">
