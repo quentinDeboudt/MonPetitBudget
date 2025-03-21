@@ -1,10 +1,10 @@
 <template>
   <v-app-bar :elevation="2">
     <template v-slot:prepend v-if="isDarkMode">
-      <v-img class="logo" src="/src/assets/logo_bank/Logo_mon_petit_budget_light.png" />
+      <v-img class="logo" src="/logo_bank/Logo_mon_petit_budget_light.png" />
     </template>
     <template v-slot:prepend v-if="!isDarkMode">
-      <v-img class="logo" src="/src/assets/logo_bank/Logo_mon_petit_budget_dark.png" />
+      <v-img class="logo" src="/logo_bank/Logo_mon_petit_budget_dark.png" />
     </template>
   
     <v-app-bar-title>
