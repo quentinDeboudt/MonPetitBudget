@@ -1,9 +1,16 @@
 <template >
   <div class="allPart">
     <div class="designPart">
-      <v-img src="/src/assets/logo_bank/login_page.png" />
+      <v-img  src="/public/logo_bank/login_page.png" />
     </div>
-    <v-img class="logo" src="/src/assets/logo_bank/Logo_mon_petit_budget_dark.png" />
+    <div class="logo">
+      <div v-if="isDarkMode">
+        <v-img class="logo" src="/public/logo_bank/Logo_mon_petit_budget_light.png" />
+      </div>
+      <div v-if="!isDarkMode">
+        <v-img class="logo" src="/public/logo_bank/Logo_mon_petit_budget_dark.png" />
+      </div>
+    </div>
     <div class="loginPart">
       <div v-if="currentUser" class="currentUser">
         <p>Déja connecté en tant que:</p>
@@ -15,7 +22,7 @@
       </div>
 
       <v-btn @click="signIn">
-        <v-img src="/src/assets/logo_bank/google.png" style="width: 20px;"></v-img>
+        <v-img src="/public/logo_bank/google.png" style="width: 20px;"></v-img>
         Connection avec Google
       </v-btn>
     </div>
@@ -30,17 +37,22 @@
   import { onAuthStateChanged, type User } from 'firebase/auth';
   import { auth } from '@/plugins/firebase';
   import { getFirestore, doc, getDoc } from "firebase/firestore";
+  import { getDarkMode } from '@/services/userService';
   
   let currentUser = ref<User | undefined>();
   let profileImageUrl = ref<string>();
   const db = getFirestore();
   const userStore = useUserStore();
-
+  const isDarkMode = ref<boolean>();
+  
   /**
    * onMounted - waits for the DOM to be completely rendered.
    */
   onMounted(async () => {
     userStore.initUser();
+    if(currentUser.value){
+      isDarkMode.value = await getDarkMode(currentUser.value.uid);
+    }
   });
 
   /**
@@ -48,9 +60,10 @@
    * @param user
    * @param auth
    */
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if(user){
       currentUser.value = user;
+      isDarkMode.value = await getDarkMode(currentUser.value.uid);
       profileImageUrl = computed<string>(() => {
         return currentUser.value?.photoURL ?? '/images/default-avatar.png'
       })
@@ -87,23 +100,24 @@
   .allPart{
     display: flex;
     flex-direction: row;
-    width: 99vw;
+    width: 100vw;
     height: 100vh;
   }
   .designPart{
-    width: 49vw;
-    height: 100vh;
+    width: 900px;
+    background-color: #F5F1E1;
   }
   .loginPart {
-    height: 100vh;
-    width: 50vw;
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
   .logo{
-    width: 13vw;
+    width: 10vw;
+    height: 10vh;
     position: absolute;
   }
   .imageProfil{
@@ -114,5 +128,31 @@
   }
   .currentUser {
     margin: 30px;
+  }
+
+  /* Cacher l'image sur les petits écrans */
+  @media (max-width: 1200px) {
+    .designPart {
+      display: none;
+    }
+    allPart{
+      margin: 10%;
+    }
+    .logo{
+      width: 200px;
+    }
+    .loginPart {
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .imageProfil{
+      width: 30px;
+      height: 30px;
+      border: 1px solid black;
+      border-radius: 30px;
+    }
   }
 </style>
