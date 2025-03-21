@@ -39,11 +39,12 @@
     </v-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import { defineProps, watch, defineEmits  } from "vue";
     import { onMounted, nextTick } from 'vue';
     import { getLogoByName } from '@/data/logos';
     import { ExpenseMapper } from "@/interfaces/ExpenseMapper";
+    import type { ExpenseDTO } from "@/interfaces/ExpenseDto";
 
     const date = ref(new Date());
     const props = defineProps(["monthlyExpenses"]);
@@ -51,8 +52,8 @@
     const Expenses = ref();
     let displayMonth = parseInt(new Date().toISOString().split('T')[0].split('-')[1]);
     let today = new Date().toISOString().split('T')[0];
-    let lastYear = null; // Stocke la dernière année reçue
-    let lastMonth = null; // Stocke la dernière année reçue
+    let lastYear: number | null = null;
+    let lastMonth: number | null = null;
        
     /*
      * onMounted - waits for the DOM to be completely rendered.
@@ -73,7 +74,7 @@
      */
     function goToToday(){
         date.value = new Date();
-        emit('current-month', date)
+        emit('current-month', date);
     }
 
     /*
@@ -81,12 +82,14 @@
      * @param expenses - list of expenses.
      * @param month - month to be changed.
      */
-    function addIconExpensesInCalendar(expenses) {
+    function addIconExpensesInCalendar(expenses: ExpenseDTO[]) {
         for (let index = 0; index < expenses.length; index++) {
 
-            //add a "0" if the day or month is less than 10:
-            let transfomrmedMonth = displayMonth;
-            let transfomrmedday;
+            let transfomrmedMonth: string | number;
+            let transfomrmedday: string | number;
+
+            transfomrmedMonth = displayMonth;
+            transfomrmedday = 0;
 
             for (const [key, value] of Object.entries(expenses[index].date)) {
                 if (key === 'month') {
@@ -103,10 +106,10 @@
             document
             .querySelectorAll(`.v-date-picker-month .v-date-picker-month__day[data-v-date="${selectedDate}"] .v-btn--icon`)
             .forEach(function(element) {
-                element.style.backgroundImage = `url(${logo.path})`;
-                element.style.backgroundSize = 'contain';
-                element.style.backgroundPosition = 'center';
-                element.style.backgroundRepeat = 'no-repeat';
+                (element as HTMLElement).style.backgroundImage = `url(${logo.path})`;
+                (element as HTMLElement).style.backgroundSize = 'contain';
+                (element as HTMLElement).style.backgroundPosition = 'center';
+                (element as HTMLElement).style.backgroundRepeat = 'no-repeat';
             });
         }
     }
@@ -115,7 +118,7 @@
      * viewExpense - Emit the selected expense.
      * @param {Expense} item - Expense selected.
      */
-    function viewExpense(expenseDTO) {
+    function viewExpense(expenseDTO: ExpenseDTO) {
         const expense = ExpenseMapper.ExpenseDtoToExpense(expenseDTO);
         emit('expense-selected', expense);
     }
@@ -124,7 +127,7 @@
      * changeDate - Change the month of the calendar.
      * @param month - month to be changed.
      */
-     function changeDate(date) {
+     function changeDate(date: number) {
         displayMonth = date +1;
         let [currentYear, currentMonth] = today.split("-").map(Number);
 
