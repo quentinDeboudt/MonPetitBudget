@@ -36,7 +36,7 @@
           class="expenseHover"
           @click="viewExpense(expense)"
         >
-          <td> <v-img id="icon" :src='expense.logo.path'/> </td>
+          <td> <v-img id="icon" :src='getLogoByName(expense.logo.name).path'/> </td>
           <td>{{ expense.name }}</td>
           <td>{{ expense.logo.category }}</td>
           <td>{{ expense.date }}</td>
@@ -52,6 +52,7 @@
   import type { Expense } from "@/interfaces/Expense";
   import type { ExpenseDTO } from "@/interfaces/ExpenseDto";
   import { ExpenseMapper } from "@/interfaces/ExpenseMapper";
+  import { getLogoByName } from "@/data/logo.ts";
 
   let expenseList: Expense[] = [];
   let Expenses = ref<Expense[]>([]);
