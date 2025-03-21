@@ -28,7 +28,7 @@
                             :key="index"
                             @click="viewExpense(expense)"
                         >
-                            <td><v-avatar :image="expense.logo.path"></v-avatar></td>
+                            <td><v-avatar :image="getLogoByName(expense.logo.name).path"></v-avatar></td>
                             <td>{{ expense.name }}</td>
                             <td>{{ expense.amount }}</td>
                         </tr>

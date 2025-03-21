@@ -52,7 +52,7 @@
   import type { Expense } from "@/interfaces/Expense";
   import type { ExpenseDTO } from "@/interfaces/ExpenseDto";
   import { ExpenseMapper } from "@/interfaces/ExpenseMapper";
-  import { getLogoByName } from "@/data/logo.ts";
+  import { getLogoByName } from "@/data/logos";
 
   let expenseList: Expense[] = [];
   let Expenses = ref<Expense[]>([]);
