@@ -7,7 +7,7 @@ export interface BudgetCategories {
     amounts: number;
     color: string;
     logo: Logo;
-    average: {status: string, difference: number};
-    min: number;
-    max: number;
+    average?: {status: string, difference: number};
+    min?: number;
+    max?: number;
 }
