@@ -1,6 +1,7 @@
 <template>
   <v-autocomplete
     style="min-height: 10vh;"
+    v-if="selectedLogo"
     v-model="selectedLogo"
     :items="logos"
     item-title="name"
@@ -38,7 +39,7 @@
     modelValue: Logo;
   }>();
   const emit = defineEmits(["update:modelValue"]);
-  const selectedLogo = ref<Logo>();
+  const selectedLogo = ref<any>();
 
   import { onMounted } from "vue";
 
