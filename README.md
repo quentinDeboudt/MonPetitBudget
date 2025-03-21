@@ -17,7 +17,7 @@ Mon Petit Budget est une application web permettant aux utilisateurs de gérer e
 
 
 
-
+# Mon Petit Budget  - Mode d'affichages:
 ![App-screen](https://github.com/user-attachments/assets/a5087794-e2e1-4cc1-aa28-f7bae49c116d)
 
 
