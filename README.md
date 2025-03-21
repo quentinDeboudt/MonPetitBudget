@@ -16,5 +16,5 @@ Mon Petit Budget est une application web permettant aux utilisateurs de gérer e
 - Vuetify pour les composants d'interface réactifs et esthétiques.
 
 
-
+![image](https://github.com/user-attachments/assets/78b374ac-3f41-4119-bc52-3fd06d82a5b4)
 ![image](https://github.com/user-attachments/assets/6726fc1d-a8f3-4c7f-9e8a-a92001db8e4d)
