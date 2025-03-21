@@ -1,8 +1,7 @@
 <template>
-
     <!-- Modal to create an expense -->
     <ModalExpenses
-        v-if="openModal && selectedExpense && currentUser?.uid"
+        v-if="openModal && selectedExpense && currentUser?.uid && newExpense"
         :expense="selectedExpense"
         :newExpense="newExpense"
         :dialog="dialogExpenses"
@@ -255,5 +254,14 @@ import { useTheme } from 'vuetify';
         overflow-y: auto; 
         height: 50vh;
         min-height: 50vh;
+    }
+
+    @media (max-width: 768px) {
+        .GlobaleCard{
+            max-width: 50vw;
+            overflow-y: auto; 
+            height: 50vh;
+            min-height: 50vh;
+        }
     }
 </style>
